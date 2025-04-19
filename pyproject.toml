@@ -1,0 +1,52 @@
+[project]
+name = "paperless-exporter"
+description = "Paperless to Obsidian exporter"
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pathvalidate>=3.2.3",
+    "peewee>=3.17.9",
+    "python-frontmatter>=1.1.0",
+]
+authors = [{ name = "Joscha Feth" }]
+maintainers = [
+    { name = "Joscha Feth", email = "joscha@feth.com" },
+]
+keywords = ["paperless", "obsidian", "export", "mariner", "markdown"]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[tool.uv]
+resolution = "lowest-direct"
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "semver"
+bump = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-watch>=4.2.0",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["tests"]
+
+[tool.ruff.lint]
+extend-select = ["T20"]

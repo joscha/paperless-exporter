@@ -1,3 +1,0 @@
-applescript==2020.12.3
-mac-tag==2020.12.3
-peewee==3.14.0
