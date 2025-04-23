@@ -1,7 +1,13 @@
 # paperless-exporter
 
-Export from Mariner Paperless app to
-[Obsidian](https://obsidian.md/)-compatible Markdown.
+Export from Mariner Paperless (gone out of business)
+
+![EOL3xy8WsAgRDGW](https://github.com/user-attachments/assets/f90ef4ba-821c-4783-96d3-3c82c717ae4b)
+
+to:
+
+* [Obsidian](https://obsidian.md/)-compatible Markdown.
+* Others? Pull requests welcome
 
 ## Instructions/Assumptions
 
@@ -13,10 +19,7 @@ you mess with it in any way.
 
 ## Limitations
 
-There are probably other limitations in this utility.
-This exports only a subset of all fields.
-
-Pull requests are of course welcome.
+* This exports only a subset of all fields.
 
 ## Final Disclaimer
 
@@ -28,3 +31,7 @@ use of this code and I am in no way affiliated with Mariner Software/Paperless.
 
 An initial version was forked from [Geekfish/paperless-exporter](https://github.com/Geekfish/paperless-exporter)
 and used as a base for this source code.
+
+## Similar projects
+
+* [paperless-to-paperless-ngx](https://github.com/jcjones/paperless-to-paperless-ngx)
