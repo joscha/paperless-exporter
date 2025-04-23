@@ -34,6 +34,9 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
 [tool.uv-dynamic-versioning]
 vcs = "git"
 style = "semver"
@@ -43,6 +46,8 @@ bump = true
 dev = [
     "pytest>=8.3.4",
     "pytest-watch>=4.2.0",
+    "rich>=14.0.0",
+    "syrupy>=4.9.1",
 ]
 
 [tool.setuptools.packages.find]

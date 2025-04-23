@@ -1,0 +1,12 @@
+# serializer version: 1
+# name: test_export
+  '''
+  test_export0/
+  ├── _attachments/
+  │   ├── sample-invoice.pdf
+  │   └── wordpress-pdf-invoice-plugin-sample.pdf
+  ├── sample-invoice.md
+  └── wordpress-pdf-invoice-plugin-sample.md
+  
+  '''
+# ---

@@ -50,6 +50,10 @@
     pytest -s -vv "$@"
   '';
 
+  scripts.test-update-snapshots.exec = ''
+    pytest --snapshot-update "$@"
+  '';
+
   scripts.test-watch.exec = ''
     ptw --onpass "terminal-notifier -message \"Tests passed\" -title \"✅\"" \
       --onfail "terminal-notifier -message \"Tests failed\" -title \"❌\""
