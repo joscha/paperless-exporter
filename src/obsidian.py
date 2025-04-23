@@ -63,7 +63,6 @@ def export(path_to_paperless_db: Path, out_dir: Path):
 
     for receipt in get_receipts(path_to_paperless_db):
         obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
-        # print(dumps(obsidian_item.transform()))
         obsidian_item.save(out_dir_path, attachments_dir_path)
 
 
@@ -78,10 +77,14 @@ class ObsidianItem:
 
     def save(self, out_dir_path: Path, attachments_dir_path: Path):
         title = self.get_document_title()
-        out_file_path = out_dir_path / f"{title}.md"
+        id = self.receipt.z_pk
+        out_file_path = out_dir_path / sanitize_filename(f"{title}.md")
+        if out_file_path.exists():
+            out_file_path = out_dir_path / sanitize_filename(f"{title} ({id}).md")
         document_path = self.get_document_path()
+
         document_out_path = attachments_dir_path / sanitize_filename(
-            f"{title}{document_path.suffix}"
+            f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{title}_{id}{document_path.suffix}"
         )
         copy(document_path, document_out_path)
         dump(

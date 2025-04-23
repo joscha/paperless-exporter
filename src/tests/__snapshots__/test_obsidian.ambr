@@ -3,8 +3,10 @@
   '''
   test_export0/
   ├── _attachments/
-  │   ├── sample-invoice.pdf
-  │   └── wordpress-pdf-invoice-plugin-sample.pdf
+  │   ├── 2025-04-18_sample-invoice_1.pdf
+  │   ├── 2025-04-18_wordpress-pdf-invoice-plugin-sample_2.pdf
+  │   └── 2025-04-24_sample-invoice_3.pdf
+  ├── sample-invoice (3).md
   ├── sample-invoice.md
   └── wordpress-pdf-invoice-plugin-sample.md
   
