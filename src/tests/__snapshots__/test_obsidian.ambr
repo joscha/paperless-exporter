@@ -195,10 +195,7 @@
     'Payment method': 'Discover',
     'Tax/VAT': 8.5,
     'Type': 'Receipt',
-    'content': '''
-      
-      ![[linked_attachment.pdf]]
-    ''',
+    'content': '![[linked_attachment.pdf]]',
     'tags': list([
       'paperless',
     ]),
@@ -339,10 +336,7 @@
     ''',
     'Original filename': 'sample-invoice.pdf',
     'Type': 'Document',
-    'content': '''
-      
-      ![[linked_attachment.pdf]]
-    ''',
+    'content': '![[linked_attachment.pdf]]',
     'tags': list([
       'paperless',
     ]),

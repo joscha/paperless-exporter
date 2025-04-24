@@ -107,16 +107,15 @@ class ObsidianItem:
         if not document_path.exists():
             raise Exception(f"Document {document_path} does not exist")
 
-        content = ""
+        content = []
         if receipt.znotes:
-            content += receipt.znotes.strip()
-            content += "\n\n"
-            content += "-----"
+            content.append(receipt.znotes.strip())
+            content.append("")
+            content.append("-----")
         if linked_attachment:
-            content += "\n"
-            content += f"![[{linked_attachment}]]"
+            content.append(f"![[{linked_attachment}]]")
 
-        markdown = Post(content=content)
+        markdown = Post(content="\n".join(content))
         if receipt.zoriginalfilename:
             markdown.metadata["Original filename"] = receipt.zoriginalfilename
         markdown.metadata["Date"] = receipt.zdate.strftime("%Y-%m-%d")
