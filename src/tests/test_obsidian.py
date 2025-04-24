@@ -1,4 +1,6 @@
 from pathlib import Path
+import pytest
+from syrupy.filters import props
 
 from . import get_tree_string_from_path
 
@@ -10,8 +12,12 @@ def assert_tree_snapshot(tmp_path, snapshot):
     assert snapshot == tree_str
 
 
-def test_export(tmp_path, snapshot):
-    export(Path("fixtures/library.paperless"), tmp_path)
+@pytest.mark.asyncio
+async def test_export(tmp_path, snapshot):
+    async for item in export(Path("fixtures/library.paperless"), tmp_path):
+        snapshot(name=item.receipt.z_pk, exclude=props("source")) == item.transform(
+            "linked_attachment.pdf"
+        ).to_dict()
     # You can use the following to see the output and open it in Obsidian:
     # export(Path("fixtures/library.paperless"), Path("fixtures/out"))
-    assert_tree_snapshot(tmp_path, snapshot)
+    assert_tree_snapshot(tmp_path, snapshot(name="tree"))
