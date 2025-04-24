@@ -57,12 +57,13 @@ def get_receipts(path_to_paperless_db: Path) -> Generator[Zreceipt, None, None]:
         database.close()
 
 
-def export(path_to_paperless_db: Path, out_dir: Path):
+async def export(path_to_paperless_db: Path, out_dir: Path):
     out_dir_path = create_out_dir(out_dir)
     attachments_dir_path = create_out_dir(out_dir_path / "_attachments")
 
     for receipt in get_receipts(path_to_paperless_db):
         obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
+        yield obsidian_item
         obsidian_item.save(out_dir_path, attachments_dir_path)
 
 
