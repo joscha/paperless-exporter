@@ -141,7 +141,8 @@
       Some notes to the doc here
       
       -----
-      ![[linked_attachment.pdf]]
+      ![[linked_attachment.document.pdf]]
+      ![[linked_attachment.original.pdf]]
     ''',
     'tags': list([
       'paperless',
@@ -195,7 +196,10 @@
     'Payment method': 'Discover',
     'Tax/VAT': 8.5,
     'Type': 'Receipt',
-    'content': '![[linked_attachment.pdf]]',
+    'content': '''
+      ![[linked_attachment.document.pdf]]
+      ![[linked_attachment.original.pdf]]
+    ''',
     'tags': list([
       'paperless',
     ]),
@@ -336,7 +340,10 @@
     ''',
     'Original filename': 'sample-invoice.pdf',
     'Type': 'Document',
-    'content': '![[linked_attachment.pdf]]',
+    'content': '''
+      ![[linked_attachment.document.pdf]]
+      ![[linked_attachment.original.pdf]]
+    ''',
     'tags': list([
       'paperless',
     ]),
@@ -346,9 +353,10 @@
   '''
   test_export0/
   ├── _attachments/
-  │   ├── 2025-04-18_sample-invoice_1.pdf
-  │   ├── 2025-04-18_wordpress-pdf-invoice-plugin-sample_2.pdf
-  │   └── 2025-04-24_sample-invoice_3.pdf
+  │   ├── 2025-04-18_sample-invoice_1.document.pdf
+  │   ├── 2025-04-18_wordpress-pdf-invoice-plugin-sample_2.document.pdf
+  │   ├── 2025-04-24_sample-invoice_3.document.pdf
+  │   └── 2025-04-24_sample-invoice_3.original.pdf
   ├── sample-invoice (3).md
   ├── sample-invoice.md
   └── wordpress-pdf-invoice-plugin-sample.md

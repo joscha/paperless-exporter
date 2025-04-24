@@ -81,7 +81,13 @@
         mdformat-frontmatter
       ]
     );
+    mdformat.excludes = [
+      "fixtures/out/.*"
+    ];
     markdownlint.enable = true;
+    markdownlint.excludes = [
+      "fixtures/out/.*\.md"
+    ];
   };
 
 }

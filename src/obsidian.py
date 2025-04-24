@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 from shutil import copy
 from typing import Generator
@@ -82,26 +83,59 @@ class ObsidianItem:
         out_file_path = out_dir_path / sanitize_filename(f"{title}.md")
         if out_file_path.exists():
             out_file_path = out_dir_path / sanitize_filename(f"{title} ({id}).md")
-        document_path = self.get_document_path()
+            if out_file_path.exists():
+                raise Exception(f"File {out_file_path} already exists")
 
-        document_out_path = attachments_dir_path / sanitize_filename(
-            f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{title}_{id}{document_path.suffix}"
-        )
-        copy(document_path, document_out_path)
+        document_path = self.get_document_path()
+        original_document_path = self.get_original_document_path()
+        prefix = f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{title}_{id}"
+
+        original_files = {
+            "document": document_path,
+            "original": original_document_path,
+        }
+        original_files = {
+            k: v for k, v in original_files.items() if v is not None and v.exists()
+        }
+
+        linked_attachments = []
+        seen_hashes = set()
+        for file_name, file_path in original_files.items():
+            file_hash = hashlib.md5(file_path.read_bytes()).hexdigest()
+            if file_hash in seen_hashes:
+                continue
+            seen_hashes.add(file_hash)
+            file_out_path = attachments_dir_path / sanitize_filename(
+                f"{prefix}.{file_name}{file_path.suffix}"
+            )
+            copy(file_path, file_out_path)
+            linked_attachments.append(file_out_path.relative_to(out_dir_path))
         dump(
-            self.transform(
-                linked_attachment=document_out_path.relative_to(out_dir_path)
-            ),
+            self.transform(linked_attachments=linked_attachments),
             out_file_path,
         )
 
     def get_document_path(self) -> Path:
         return get_document_path(self.path_to_paperless_db, self.receipt)
 
+    def get_original_document_path(self) -> Path | None:
+        if self.receipt.zoriginalfilename:
+            document_path = get_document_path(self.path_to_paperless_db, self.receipt)
+            document_file_name = document_path.name
+            document_file_name_without_extension = document_file_name.rsplit(".", 1)[0]
+            original_document_path = (
+                document_path.parent
+                / document_file_name_without_extension
+                / self.receipt.zoriginalfilename
+            )
+            if original_document_path.exists():
+                return original_document_path
+        return None
+
     def get_document_title(self) -> str:
         return get_document_title(self.receipt)
 
-    def transform(self, linked_attachment: Path = None) -> Post:
+    def transform(self, linked_attachments: list[Path] = None) -> Post:
         receipt = self.receipt
         document_path = self.get_document_path()
         if not document_path.exists():
@@ -112,8 +146,9 @@ class ObsidianItem:
             content.append(receipt.znotes.strip())
             content.append("")
             content.append("-----")
-        if linked_attachment:
-            content.append(f"![[{linked_attachment}]]")
+        if linked_attachments and len(linked_attachments) > 0:
+            for linked_attachment in linked_attachments:
+                content.append(f"![[{linked_attachment}]]")
 
         markdown = Post(content="\n".join(content))
         if receipt.zoriginalfilename:
