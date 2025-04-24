@@ -6,8 +6,8 @@ Export from Mariner Paperless (gone out of business)
 
 to:
 
-* [Obsidian](https://obsidian.md/)-compatible Markdown.
-* Others? Pull requests welcome
+- [Obsidian](https://obsidian.md/)-compatible Markdown.
+- Others? Pull requests welcome
 
 ## Instructions/Assumptions
 
@@ -19,7 +19,7 @@ you mess with it in any way.
 
 ## Limitations
 
-* This exports only a subset of all fields.
+- This exports only a subset of all fields.
 
 ## Final Disclaimer
 
@@ -34,4 +34,4 @@ and used as a base for this source code.
 
 ## Similar projects
 
-* [paperless-to-paperless-ngx](https://github.com/jcjones/paperless-to-paperless-ngx)
+- [paperless-to-paperless-ngx](https://github.com/jcjones/paperless-to-paperless-ngx)
