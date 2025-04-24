@@ -17,11 +17,14 @@
   ];
 
   # https://devenv.sh/packages/
-  packages = [
-    pkgs.git
-    pkgs.terminal-notifier
-    pkgs.python312Packages.setuptools
-  ];
+  packages =
+    [
+      pkgs.git
+      pkgs.python312Packages.setuptools
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      pkgs.terminal-notifier
+    ];
 
   languages.python.enable = true;
   languages.python.uv.enable = true;
