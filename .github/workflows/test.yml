@@ -13,9 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            nix.settings.download-buffer-size = 524288000
       - uses: cachix/cachix-action@v16
         with:
           name: devenv
