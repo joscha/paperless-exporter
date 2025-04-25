@@ -1,7 +1,7 @@
 import hashlib
 from pathlib import Path
 from shutil import copy
-from typing import Generator
+from typing import Dict, Generator
 
 from pathvalidate import sanitize_filename
 from .model import (
@@ -97,8 +97,12 @@ class ObsidianItem:
         original_files = {
             k: v for k, v in original_files.items() if v is not None and v.exists()
         }
+        if len(original_files) == 0:
+            thumbnail_path = self.get_thumbnail_path()
+            if thumbnail_path and thumbnail_path.exists():
+                original_files["thumbnail"] = thumbnail_path
 
-        linked_attachments = []
+        linked_attachments = {}
         seen_hashes = set()
         for file_name, file_path in original_files.items():
             file_hash = hashlib.md5(file_path.read_bytes()).hexdigest()
@@ -109,7 +113,7 @@ class ObsidianItem:
                 f"{prefix}.{file_name}{file_path.suffix}"
             )
             copy(file_path, file_out_path)
-            linked_attachments.append(file_out_path.relative_to(out_dir_path))
+            linked_attachments[file_name] = file_out_path.relative_to(out_dir_path)
         dump(
             self.transform(linked_attachments=linked_attachments),
             out_file_path,
@@ -128,27 +132,29 @@ class ObsidianItem:
                 / document_file_name_without_extension
                 / self.receipt.zoriginalfilename
             )
-            if original_document_path.exists():
-                return original_document_path
+            return original_document_path
+        return None
+
+    def get_thumbnail_path(self) -> Path | None:
+        if self.receipt.zthumbnailpath:
+            return self.path_to_paperless_db / Path(self.receipt.zthumbnailpath)
         return None
 
     def get_document_title(self) -> str:
         return get_document_title(self.receipt)
 
-    def transform(self, linked_attachments: list[Path] = None) -> Post:
+    def transform(self, linked_attachments: Dict[str, Path] = None) -> Post:
         receipt = self.receipt
         document_path = self.get_document_path()
-        if not document_path.exists():
-            raise Exception(f"Document {document_path} does not exist")
-
         content = []
         if receipt.znotes:
             content.append(receipt.znotes.strip())
             content.append("")
             content.append("-----")
         if linked_attachments and len(linked_attachments) > 0:
-            for linked_attachment in linked_attachments:
-                content.append(f"![[{linked_attachment}]]")
+            for file_name, file_path in linked_attachments.items():
+                content.append(f"#### {file_name}")
+                content.append(f"![[{file_path}]]")
 
         markdown = Post(content="\n".join(content))
         if receipt.zoriginalfilename:
@@ -190,7 +196,11 @@ class ObsidianItem:
         if receipt.zocrattemptedvalue == 1 and receipt.zocrresult:
             markdown.metadata["OCR result"] = receipt.zocrresult
 
+        document_exists = document_path.exists()
+
         tags = ["paperless"]
+        if not document_exists:
+            tags.append("missing-document")
         for tag in receipt.receipt_tags:
             assert isinstance(tag, ReceiptTag)
             if tag.tag.zname:
@@ -198,7 +208,8 @@ class ObsidianItem:
         if tags:
             markdown.metadata["tags"] = tags
 
-        markdown.metadata["source"] = document_path.absolute().as_uri()
+        if document_exists:
+            markdown.metadata["source"] = document_path.absolute().as_uri()
 
         if receipt.zinboxvalue == 1:
             markdown.metadata["In inbox"] = True

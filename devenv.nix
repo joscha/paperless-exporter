@@ -33,8 +33,8 @@
   languages.python.venv.enable = true;
   languages.python.version = "3.12";
 
-  scripts.build.exec = ''
-    uv build
+  scripts.clean.exec = ''
+    rm -rf $DEVENV_ROOT/fixtures/out
   '';
 
   scripts.generate-models.exec = ''
@@ -50,11 +50,12 @@
   '';
 
   scripts.test-all.exec = ''
+    clean
     pytest -s -vv "$@"
   '';
 
   scripts.test-update-snapshots.exec = ''
-    pytest --snapshot-update "$@"
+    test-all --snapshot-update "$@"
   '';
 
   scripts.test-watch.exec = ''
