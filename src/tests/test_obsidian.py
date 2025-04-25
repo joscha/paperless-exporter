@@ -16,10 +16,10 @@ def assert_tree_snapshot(tmp_path, snapshot):
 async def test_export(tmp_path, snapshot):
     async for item in export(Path("fixtures/library.paperless"), tmp_path):
         snapshot(name=item.receipt.z_pk, exclude=props("source")) == item.transform(
-            linked_attachments=[
-                "linked_attachment.document.pdf",
-                "linked_attachment.original.pdf",
-            ]
+            linked_attachments={
+                "document": "linked_attachment.document.pdf",
+                "original": "linked_attachment.original.pdf",
+            }
         ).to_dict()
     # You can use the following to see the output and open it in Obsidian:
     # async for item in export(Path("fixtures/library.paperless"), Path("fixtures/out")):

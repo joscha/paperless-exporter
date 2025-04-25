@@ -141,7 +141,9 @@
       Some notes to the doc here
       
       -----
+      #### document
       ![[linked_attachment.document.pdf]]
+      #### original
       ![[linked_attachment.original.pdf]]
     ''',
     'tags': list([
@@ -197,7 +199,9 @@
     'Tax/VAT': 8.5,
     'Type': 'Receipt',
     'content': '''
+      #### document
       ![[linked_attachment.document.pdf]]
+      #### original
       ![[linked_attachment.original.pdf]]
     ''',
     'tags': list([
@@ -341,11 +345,36 @@
     'Original filename': 'sample-invoice.pdf',
     'Type': 'Document',
     'content': '''
+      #### document
       ![[linked_attachment.document.pdf]]
+      #### original
       ![[linked_attachment.original.pdf]]
     ''',
     'tags': list([
       'paperless',
+    ]),
+  })
+# ---
+# name: test_export.4
+  dict({
+    'Collections': list([
+      'Library',
+    ]),
+    'Date': '2025-04-25',
+    'Import date': '2025-04-24T22:39:03.893648+00:00',
+    'In inbox': True,
+    'OCR result': 'Dummy PDF file',
+    'Original filename': 'dummy (1).pdf',
+    'Type': 'Document',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+      #### original
+      ![[linked_attachment.original.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+      'missing-document',
     ]),
   })
 # ---
@@ -356,7 +385,9 @@
   │   ├── 2025-04-18_sample-invoice_1.document.pdf
   │   ├── 2025-04-18_wordpress-pdf-invoice-plugin-sample_2.document.pdf
   │   ├── 2025-04-24_sample-invoice_3.document.pdf
-  │   └── 2025-04-24_sample-invoice_3.original.pdf
+  │   ├── 2025-04-24_sample-invoice_3.original.pdf
+  │   └── 2025-04-25_missing_4.thumbnail.png
+  ├── missing.md
   ├── sample-invoice (3).md
   ├── sample-invoice.md
   └── wordpress-pdf-invoice-plugin-sample.md
