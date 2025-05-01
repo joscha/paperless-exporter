@@ -1,11 +1,221 @@
 # serializer version: 1
-# name: test_export.1
+# name: test_export[collection_1]
+  Post(
+    content='''
+      * [[sample-invoice (1)]]
+      * [[wordpress-pdf-invoice-plugin-sample (2)]]
+      * [[sample-invoice (3)]]
+      * [[missing (4)]]
+      * [[pdf-test (5)]]
+      * [[drylab (6)]]
+      * [[invoicesample (7)]]
+      * [[PDF_TestPage (8)]]
+      * [[Get_Started_With_Smallpdf (9)]]
+      * [[Free_Test_Data_100KB_PDF (10)]]
+      * [[test_pdf_acrobat (11)]]
+      * [[sample_ _with_ special characters _o_ _ (12)]]
+    ''',
+    handler=None,
+    metadata=dict({
+    }),
+  )
+# ---
+# name: test_export[collection_2]
+  Post(
+    content='* [[sample-invoice (1)]]',
+    handler=None,
+    metadata=dict({
+    }),
+  )
+# ---
+# name: test_export[collection_3]
+  Post(
+    content='* [[sample-invoice (1)]]',
+    handler=None,
+    metadata=dict({
+    }),
+  )
+# ---
+# name: test_export[collection_4]
+  Post(
+    content='''
+      * [[pdf-test (5)]]
+      * [[drylab (6)]]
+      * [[invoicesample (7)]]
+      * [[PDF_TestPage (8)]]
+      * [[Get_Started_With_Smallpdf (9)]]
+      * [[Free_Test_Data_100KB_PDF (10)]]
+      * [[test_pdf_acrobat (11)]]
+    ''',
+    handler=None,
+    metadata=dict({
+    }),
+  )
+# ---
+# name: test_export[document_10]
+  dict({
+    'Collection paths': list([
+      'Library',
+      'New Test PDFs',
+    ]),
+    'Date': '2025-05-01',
+    'Import date': '2025-05-01T09:03:29.751724+00:00',
+    'OCR result': '''
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis elit nec ante eleifend,
+      eget cursus tortor auctor. Integer at ultrices lorem, eget bibendum turpis. Praesent lacus
+      sapien, ullamcorper gravida suscipit eu, pharetra et eros. Integer interdum dictum volutpat.
+      Nulla pellentesque ante vitae sapien luctus ornare. Ut a risus quis diam rhoncus rhoncus.
+      Integer tortor lorem, vulputate non tempus eu, suscipit id tellus. In laoreet sollicitudin quam, et
+      condimentum justo ultrices eget. Pellentesque hendrerit suscipit diam ac porttitor. Aenean
+      dictum id magna vel venenatis. In rhoncus tempus libero, sed consectetur nibh ultrices nec.
+      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
+      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
+      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
+      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
+      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies at
+      odio accumsan, maximus eleifend justo. Sed sed convallis elit. In finibus congue mauris at
+      venenatis. Praesent pellentesque lacus eros, nec auctor neque semper eget. Sed vehicula
+      ornare efficitur. Donec magna felis, ullamcorper et euismod eget, facilisis sed nibh.
+      1 2 3 4
+      5 6 7 8
+      9 10 11 12
+      13 14 15 16
+      Fusce efficitur mi ex. Quisque elementum elementum odio, a accumsan nibh consectetur sed.
+      Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc a feugiat urna. Integer sit
+      amet tincidunt mauris. Donec id urna nec turpis laoreet aliquam ac id ante. Curabitur faucibus
+      consectetur velit, vitae efficitur odio facilisis sed.
+      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
+      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
+      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
+      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
+      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies at
+      odio accumsan, maximus eleifend justo. Sed sed convallis elit. In finibus congue mauris at
+      venenatis. Praesent pellentesque lacus eros, nec auctor neque semper eget. Sed vehicula
+      ornare efficitur. Donec magna felis, ullamcorper et euismod eget, facilisis sed nibh.
+      Vestibulum fermentum augue a lacus mattis condimentum. Sed ligula lacus, faucibus non
+      suscipit sed, volutpat id nisl. Orci varius natoque penatibus et magnis dis parturient montes,
+      nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+      inceptos himenaeos. Etiam et facilisis nibh, sagittis vulputate magna. Morbi iaculis placerat
+      mauris eu sollicitudin. Nam ac varius sem, sit amet dictum tortor. Etiam finibus metus lacus. Ut
+      tincidunt, lacus vel rhoncus viverra, enim purus sollicitudin lacus, id vulputate ante felis ut ante.
+      Integer non purus feugiat, blandit lorem ut, elementum lectus. Sed condimentum accumsan
+      arcu vel vehicula.
+      1 2 3 4
+      5 6 7 8
+      9 10 11 12
+      13 14 15 16
+      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
+      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
+      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
+      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
+      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies.
+    ''',
+    'Original filename': 'Free_Test_Data_100KB_PDF.pdf',
+    'Type': 'Document',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+      #### original
+      ![[linked_attachment.original.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+      'paperless-type-document',
+    ]),
+  })
+# ---
+# name: test_export[document_11]
+  dict({
+    'Collection paths': list([
+      'Library',
+      'New Test PDFs',
+    ]),
+    'Date': '2025-05-01',
+    'Import date': '2025-05-01T09:03:30.255227+00:00',
+    'OCR result': '''
+      This is a test PDF document.
+      If you can read this, you have Adobe Acrobat Reader installed on your computer.
+    ''',
+    'Original filename': 'test_pdf_acrobat.pdf',
+    'Type': 'Document',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+      #### original
+      ![[linked_attachment.original.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+      'paperless-type-document',
+    ]),
+  })
+# ---
+# name: test_export[document_12]
+  dict({
+    'Collection paths': list([
+      'Library',
+    ]),
+    'Date': '2025-05-01',
+    'Import date': '2025-05-01T09:29:55.838063+00:00',
+    'OCR result': '''
+      Sample PDF
+      This is a simple PDF file. Fun fun fun.
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus facilisis odio sed mi.
+      Curabitur suscipit. Nullam vel nisi. Etiam semper ipsum ut lectus. Proin aliquam, erat eget
+      pharetra commodo, eros mi condimentum quam, sed commodo justo quam ut velit.
+      Integer a erat. Cras laoreet ligula cursus enim. Aenean scelerisque velit et tellus.
+      Vestibulum dictum aliquet sem. Nulla facilisi. Vestibulum accumsan ante vitae elit. Nulla
+      erat dolor, blandit in, rutrum quis, semper pulvinar, enim. Nullam varius congue risus.
+      Vivamus sollicitudin, metus ut interdum eleifend, nisi tellus pellentesque elit, tristique
+      accumsan eros quam et risus. Suspendisse libero odio, mattis sit amet, aliquet eget,
+      hendrerit vel, nulla. Sed vitae augue. Aliquam erat volutpat. Aliquam feugiat vulputate nisl.
+      Suspendisse quis nulla pretium ante pretium mollis. Proin velit ligula, sagittis at, egestas a,
+      pulvinar quis, nisl.
+      Pellentesque sit amet lectus. Praesent pulvinar, nunc quis iaculis sagittis, justo quam
+      lobortis tortor, sed vestibulum dui metus venenatis est. Nunc cursus ligula. Nulla facilisi.
+      Phasellus ullamcorper consectetuer ante. Duis tincidunt, urna id condimentum luctus, nibh
+      ante vulputate sapien, id sagittis massa orci ut enim. Pellentesque vestibulum convallis
+      sem. Nulla consequat quam ut nisl. Nullam est. Curabitur tincidunt dapibus lorem. Proin
+      velit turpis, scelerisque sit amet, iaculis nec, rhoncus ac, ipsum. Phasellus lorem arcu,
+      feugiat eu, gravida eu, consequat molestie, ipsum. Nullam vel est ut ipsum volutpat
+      feugiat. Aenean pellentesque.
+      In mauris. Pellentesque dui nisi, iaculis eu, rhoncus in, venenatis ac, ante. Ut odio justo,
+      scelerisque vel, facilisis non, commodo a, pede. Cras nec massa sit amet tortor volutpat
+      varius. Donec lacinia, neque a luctus aliquet, pede massa imperdiet ante, at varius lorem
+      pede sed sapien. Fusce erat nibh, aliquet in, eleifend eget, commodo eget, erat. Fusce
+      consectetuer. Cras risus tortor, porttitor nec, tristique sed, convallis semper, eros. Fusce
+      vulputate ipsum a mauris. Phasellus mollis. Curabitur sed urna. Aliquam nec sapien non
+      nibh pulvinar convallis. Vivamus facilisis augue quis quam. Proin cursus aliquet metus.
+      Suspendisse lacinia. Nulla at tellus ac turpis eleifend scelerisque. Maecenas a pede vitae
+      enim commodo interdum. Donec odio. Sed sollicitudin dui vitae justo.
+      Morbi elit nunc, facilisis a, mollis a, molestie at, lectus. Suspendisse eget mauris eu tellus
+      molestie cursus. Duis ut magna at justo dignissim condimentum. Cum sociis natoque
+      penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus varius. Ut sit
+      amet diam suscipit mauris ornare aliquam. Sed varius. Duis arcu. Etiam tristique massa
+      eget dui. Phasellus congue. Aenean est erat, tincidunt eget, venenatis quis, commodo at,
+      quam.
+    ''',
+    'Original filename': 'sample.pdf',
+    'Type': 'Document',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+      #### original
+      ![[linked_attachment.original.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+      'paperless-type-document',
+    ]),
+  })
+# ---
+# name: test_export[document_1]
   dict({
     'Category': 'Software/Hardware',
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'My collection',
-      'Test Folder / Another collection',
+      'Test Folder/Another collection',
     ]),
     'Date': '2025-04-18',
     'Import date': '2025-04-18T18:19:08.763928+00:00',
@@ -148,169 +358,16 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-email',
       'another-tag',
       'my_tag',
     ]),
   })
 # ---
-# name: test_export.10
-  dict({
-    'Collections': list([
-      'Library',
-      'New Test PDFs',
-    ]),
-    'Date': '2025-05-01',
-    'Import date': '2025-05-01T09:03:29.751724+00:00',
-    'OCR result': '''
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis elit nec ante eleifend,
-      eget cursus tortor auctor. Integer at ultrices lorem, eget bibendum turpis. Praesent lacus
-      sapien, ullamcorper gravida suscipit eu, pharetra et eros. Integer interdum dictum volutpat.
-      Nulla pellentesque ante vitae sapien luctus ornare. Ut a risus quis diam rhoncus rhoncus.
-      Integer tortor lorem, vulputate non tempus eu, suscipit id tellus. In laoreet sollicitudin quam, et
-      condimentum justo ultrices eget. Pellentesque hendrerit suscipit diam ac porttitor. Aenean
-      dictum id magna vel venenatis. In rhoncus tempus libero, sed consectetur nibh ultrices nec.
-      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
-      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
-      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
-      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
-      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies at
-      odio accumsan, maximus eleifend justo. Sed sed convallis elit. In finibus congue mauris at
-      venenatis. Praesent pellentesque lacus eros, nec auctor neque semper eget. Sed vehicula
-      ornare efficitur. Donec magna felis, ullamcorper et euismod eget, facilisis sed nibh.
-      1 2 3 4
-      5 6 7 8
-      9 10 11 12
-      13 14 15 16
-      Fusce efficitur mi ex. Quisque elementum elementum odio, a accumsan nibh consectetur sed.
-      Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc a feugiat urna. Integer sit
-      amet tincidunt mauris. Donec id urna nec turpis laoreet aliquam ac id ante. Curabitur faucibus
-      consectetur velit, vitae efficitur odio facilisis sed.
-      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
-      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
-      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
-      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
-      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies at
-      odio accumsan, maximus eleifend justo. Sed sed convallis elit. In finibus congue mauris at
-      venenatis. Praesent pellentesque lacus eros, nec auctor neque semper eget. Sed vehicula
-      ornare efficitur. Donec magna felis, ullamcorper et euismod eget, facilisis sed nibh.
-      Vestibulum fermentum augue a lacus mattis condimentum. Sed ligula lacus, faucibus non
-      suscipit sed, volutpat id nisl. Orci varius natoque penatibus et magnis dis parturient montes,
-      nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-      inceptos himenaeos. Etiam et facilisis nibh, sagittis vulputate magna. Morbi iaculis placerat
-      mauris eu sollicitudin. Nam ac varius sem, sit amet dictum tortor. Etiam finibus metus lacus. Ut
-      tincidunt, lacus vel rhoncus viverra, enim purus sollicitudin lacus, id vulputate ante felis ut ante.
-      Integer non purus feugiat, blandit lorem ut, elementum lectus. Sed condimentum accumsan
-      arcu vel vehicula.
-      1 2 3 4
-      5 6 7 8
-      9 10 11 12
-      13 14 15 16
-      Aenean pulvinar euismod ligula at lacinia. Ut consectetur dui ipsum, a rhoncus lacus gravida
-      vitae. In mollis tortor in libero lobortis molestie. Integer tempor justo ligula, eu euismod lectus
-      fringilla eu. Proin vestibulum sodales tristique. Pellentesque pretium, nibh et aliquet
-      scelerisque, felis nulla lobortis tellus, at tristique libero ipsum a leo. Nulla mauris turpis, feugiat
-      eu lacus eu, eleifend malesuada lorem. Praesent quis justo ligula. Cras quam risus, ultricies.
-    ''',
-    'Original filename': 'Free_Test_Data_100KB_PDF.pdf',
-    'Type': 'Document',
-    'content': '''
-      #### document
-      ![[linked_attachment.document.pdf]]
-      #### original
-      ![[linked_attachment.original.pdf]]
-    ''',
-    'tags': list([
-      'paperless',
-    ]),
-  })
-# ---
-# name: test_export.11
-  dict({
-    'Collections': list([
-      'Library',
-      'New Test PDFs',
-    ]),
-    'Date': '2025-05-01',
-    'Import date': '2025-05-01T09:03:30.255227+00:00',
-    'OCR result': '''
-      This is a test PDF document.
-      If you can read this, you have Adobe Acrobat Reader installed on your computer.
-    ''',
-    'Original filename': 'test_pdf_acrobat.pdf',
-    'Type': 'Document',
-    'content': '''
-      #### document
-      ![[linked_attachment.document.pdf]]
-      #### original
-      ![[linked_attachment.original.pdf]]
-    ''',
-    'tags': list([
-      'paperless',
-    ]),
-  })
-# ---
-# name: test_export.12
-  dict({
-    'Collections': list([
-      'Library',
-    ]),
-    'Date': '2025-05-01',
-    'Import date': '2025-05-01T09:29:55.838063+00:00',
-    'OCR result': '''
-      Sample PDF
-      This is a simple PDF file. Fun fun fun.
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus facilisis odio sed mi.
-      Curabitur suscipit. Nullam vel nisi. Etiam semper ipsum ut lectus. Proin aliquam, erat eget
-      pharetra commodo, eros mi condimentum quam, sed commodo justo quam ut velit.
-      Integer a erat. Cras laoreet ligula cursus enim. Aenean scelerisque velit et tellus.
-      Vestibulum dictum aliquet sem. Nulla facilisi. Vestibulum accumsan ante vitae elit. Nulla
-      erat dolor, blandit in, rutrum quis, semper pulvinar, enim. Nullam varius congue risus.
-      Vivamus sollicitudin, metus ut interdum eleifend, nisi tellus pellentesque elit, tristique
-      accumsan eros quam et risus. Suspendisse libero odio, mattis sit amet, aliquet eget,
-      hendrerit vel, nulla. Sed vitae augue. Aliquam erat volutpat. Aliquam feugiat vulputate nisl.
-      Suspendisse quis nulla pretium ante pretium mollis. Proin velit ligula, sagittis at, egestas a,
-      pulvinar quis, nisl.
-      Pellentesque sit amet lectus. Praesent pulvinar, nunc quis iaculis sagittis, justo quam
-      lobortis tortor, sed vestibulum dui metus venenatis est. Nunc cursus ligula. Nulla facilisi.
-      Phasellus ullamcorper consectetuer ante. Duis tincidunt, urna id condimentum luctus, nibh
-      ante vulputate sapien, id sagittis massa orci ut enim. Pellentesque vestibulum convallis
-      sem. Nulla consequat quam ut nisl. Nullam est. Curabitur tincidunt dapibus lorem. Proin
-      velit turpis, scelerisque sit amet, iaculis nec, rhoncus ac, ipsum. Phasellus lorem arcu,
-      feugiat eu, gravida eu, consequat molestie, ipsum. Nullam vel est ut ipsum volutpat
-      feugiat. Aenean pellentesque.
-      In mauris. Pellentesque dui nisi, iaculis eu, rhoncus in, venenatis ac, ante. Ut odio justo,
-      scelerisque vel, facilisis non, commodo a, pede. Cras nec massa sit amet tortor volutpat
-      varius. Donec lacinia, neque a luctus aliquet, pede massa imperdiet ante, at varius lorem
-      pede sed sapien. Fusce erat nibh, aliquet in, eleifend eget, commodo eget, erat. Fusce
-      consectetuer. Cras risus tortor, porttitor nec, tristique sed, convallis semper, eros. Fusce
-      vulputate ipsum a mauris. Phasellus mollis. Curabitur sed urna. Aliquam nec sapien non
-      nibh pulvinar convallis. Vivamus facilisis augue quis quam. Proin cursus aliquet metus.
-      Suspendisse lacinia. Nulla at tellus ac turpis eleifend scelerisque. Maecenas a pede vitae
-      enim commodo interdum. Donec odio. Sed sollicitudin dui vitae justo.
-      Morbi elit nunc, facilisis a, mollis a, molestie at, lectus. Suspendisse eget mauris eu tellus
-      molestie cursus. Duis ut magna at justo dignissim condimentum. Cum sociis natoque
-      penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus varius. Ut sit
-      amet diam suscipit mauris ornare aliquam. Sed varius. Duis arcu. Etiam tristique massa
-      eget dui. Phasellus congue. Aenean est erat, tincidunt eget, venenatis quis, commodo at,
-      quam.
-    ''',
-    'Original filename': 'sample.pdf',
-    'Type': 'Document',
-    'content': '''
-      #### document
-      ![[linked_attachment.document.pdf]]
-      #### original
-      ![[linked_attachment.original.pdf]]
-    ''',
-    'tags': list([
-      'paperless',
-    ]),
-  })
-# ---
-# name: test_export.2
+# name: test_export[document_2]
   dict({
     'Amount': 93.5,
-    'Collections': list([
+    'Collection paths': list([
       'Library',
     ]),
     'Date': '2025-04-18',
@@ -360,12 +417,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-receipt',
     ]),
   })
 # ---
-# name: test_export.3
+# name: test_export[document_3]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
     ]),
     'Date': '2025-04-24',
@@ -506,12 +564,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
-# name: test_export.4
+# name: test_export[document_4]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
     ]),
     'Date': '2025-04-25',
@@ -528,13 +587,14 @@
     ''',
     'tags': list([
       'paperless',
-      'missing-document',
+      'paperless-type-document',
+      'paperless-document-missing',
     ]),
   })
 # ---
-# name: test_export.5
+# name: test_export[document_5]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'New Test PDFs',
     ]),
@@ -562,12 +622,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
-# name: test_export.6
+# name: test_export[document_6]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'New Test PDFs',
     ]),
@@ -729,12 +790,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
-# name: test_export.7
+# name: test_export[document_7]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'New Test PDFs',
     ]),
@@ -771,12 +833,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
-# name: test_export.8
+# name: test_export[document_8]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'New Test PDFs',
     ]),
@@ -801,12 +864,13 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
-# name: test_export.9
+# name: test_export[document_9]
   dict({
-    'Collections': list([
+    'Collection paths': list([
       'Library',
       'New Test PDFs',
     ]),
@@ -845,6 +909,7 @@
     ''',
     'tags': list([
       'paperless',
+      'paperless-type-document',
     ]),
   })
 # ---
@@ -865,6 +930,12 @@
   │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
   │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
   │   └── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
+  ├── collections/
+  │   ├── Test Folder/
+  │   │   └── Another collection.md
+  │   ├── Library.md
+  │   ├── My collection.md
+  │   └── New Test PDFs.md
   ├── drylab (6).md
   ├── Free_Test_Data_100KB_PDF (10).md
   ├── Get_Started_With_Smallpdf (9).md
