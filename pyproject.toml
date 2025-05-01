@@ -48,7 +48,7 @@ packages = ["src"]
 [tool.uv-dynamic-versioning]
 vcs = "git"
 style = "semver"
-#strict = true
+strict = true
 bump = true
 latest-tag = true
 
@@ -68,4 +68,4 @@ exclude = ["tests"]
 extend-select = ["T20"]
 
 [project.scripts]
-paperless-exporter = "cli:main"
+paperless-exporter = "src.cli:main"
