@@ -39,9 +39,10 @@ class DaysSinceYear2001(Field):
     def python_value(self, value):
         """Convert int → datetime."""
         if isinstance(value, float) or isinstance(value, int):
-            return datetime.astimezone(
-                datetime(2001, 1, 1) + timedelta(seconds=value), UTC
-            )
+            # Create naive datetime first
+            naive_dt = datetime(2001, 1, 1) + timedelta(seconds=value)
+            # Then explicitly set it to UTC
+            return naive_dt.replace(tzinfo=UTC)
         return value
 
 
