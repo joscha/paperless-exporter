@@ -26,8 +26,5 @@ async def test_export(tmp_path, snapshot):
             ).to_dict()
         elif isinstance(item, CollectionItem):
             snapshot(name=f"collection_{item.collection.z_pk}") == item.markdown
-    # You can use the following to see the output and open it in Obsidian:
-    # async for item in export(Path("fixtures/library.paperless"), Path("fixtures/out")):
-    #     pass
 
     assert_tree_snapshot(tmp_path, snapshot(name="tree"))
