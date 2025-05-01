@@ -17,6 +17,7 @@ from .model import (
     database,
 )
 from frontmatter import Post, dump
+from peewee import fn
 
 
 logger = logging.getLogger(__name__)
@@ -63,14 +64,26 @@ def get_receipts(path_to_paperless_db: Path) -> Generator[Zreceipt, None, None]:
         database.close()
 
 
+def get_receipt_max_id(path_to_paperless_db: Path) -> int:
+    database.init(path_to_paperless_db / "DocumentWallet.documentwalletsql")
+    try:
+        return Zreceipt.select(fn.MAX(Zreceipt.z_pk)).scalar()
+    finally:
+        database.close()
+
+
 async def export(path_to_paperless_db: Path, out_dir: Path):
     out_dir_path = create_out_dir(out_dir)
     attachments_dir_path = create_out_dir(out_dir_path / "_attachments")
 
+    max_id = get_receipt_max_id(path_to_paperless_db)
+    logger.debug(f"Max receipt ID: {max_id}")
+    max_length = len(str(max_id))
+
     for receipt in get_receipts(path_to_paperless_db):
         obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
         yield obsidian_item
-        obsidian_item.save(out_dir_path, attachments_dir_path)
+        obsidian_item.save(out_dir_path, attachments_dir_path, max_length)
 
 
 class ObsidianItem:
@@ -82,7 +95,7 @@ class ObsidianItem:
         self.receipt = receipt
         self.path_to_paperless_db = path_to_paperless_db
 
-    def save(self, out_dir_path: Path, attachments_dir_path: Path):
+    def save(self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int):
         title = self.get_document_title()
         id = self.receipt.z_pk
         out_file_path = out_dir_path / sanitize_filename(f"{title}.md")
@@ -93,7 +106,8 @@ class ObsidianItem:
 
         document_path = self.get_document_path()
         original_document_path = self.get_original_document_path()
-        prefix = f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{title}_{id}"
+        padded_id = str(id).zfill(max_id_length)
+        prefix = f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{padded_id}_{title}"
 
         original_files = {
             "document": document_path,
