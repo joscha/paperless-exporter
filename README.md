@@ -6,7 +6,6 @@ Export from Mariner Paperless (gone out of business) to:
   ![paperless](https://github.com/user-attachments/assets/25a937fd-e87c-42b5-9cac-9c8b52cad7b3) becomes ![obsidian graph](https://github.com/user-attachments/assets/76699715-7fd4-4aa1-8308-eeccf1b4dd25) and ![obsidian document](https://github.com/user-attachments/assets/7a6c7b0b-de43-4331-96ca-ae999ecc2927)
 
 
-
 - Others? Pull requests welcome
 
 ## Features
