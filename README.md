@@ -3,7 +3,7 @@
 Export from Mariner Paperless (gone out of business) to:
 
 - [Obsidian](https://obsidian.md/)-compatible Markdown. See:
-  <img width="1580" alt="SCR-20250501-nkbf" src="https://github.com/user-attachments/assets/25a937fd-e87c-42b5-9cac-9c8b52cad7b3" /> becomes <img width="1344" alt="SCR-20250501-nlaz" src="https://github.com/user-attachments/assets/76699715-7fd4-4aa1-8308-eeccf1b4dd25" /> and <img width="1450" alt="SCR-20250501-nlnx" src="https://github.com/user-attachments/assets/7a6c7b0b-de43-4331-96ca-ae999ecc2927" />
+  ![paperless](https://github.com/user-attachments/assets/25a937fd-e87c-42b5-9cac-9c8b52cad7b3) becomes ![obsidian graph](https://github.com/user-attachments/assets/76699715-7fd4-4aa1-8308-eeccf1b4dd25) and ![obsidian document](https://github.com/user-attachments/assets/7a6c7b0b-de43-4331-96ca-ae999ecc2927)
 
 
 
