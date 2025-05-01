@@ -28,3 +28,8 @@ def build_tree_from_path(path: Path) -> Tree:
 
     add_node(root, path)
     return root
+
+
+def assert_tree_snapshot(tmp_path, snapshot):
+    tree_str = get_tree_string_from_path(tmp_path)
+    assert snapshot == tree_str

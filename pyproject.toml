@@ -56,3 +56,6 @@ exclude = ["tests"]
 
 [tool.ruff.lint]
 extend-select = ["T20"]
+
+[project.scripts]
+paperless-exporter = "cli:main"
