@@ -17,11 +17,27 @@ from .model import (
     database,
 )
 from frontmatter import Post, dump
-from peewee import fn
+from peewee import fn, SqliteDatabase
 
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+class PaperlessDatabase(SqliteDatabase):
+    path_to_paperless_db: Path
+
+    def __init__(self, path_to_paperless_db: Path):
+        self.path_to_paperless_db = path_to_paperless_db
+
+    def __enter__(self):
+        database.init(self.path_to_paperless_db / "DocumentWallet.documentwalletsql")
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # always close, even if an exception occurred
+        database.close()
+        # return False so any exception is propagated
+        return False
 
 
 def get_collection_paths(collection: Zcollection) -> str:
@@ -56,34 +72,35 @@ def get_document_title(receipt: Zreceipt):
     return title
 
 
-def get_receipts(path_to_paperless_db: Path) -> Generator[Zreceipt, None, None]:
-    database.init(path_to_paperless_db / "DocumentWallet.documentwalletsql")
-    try:
-        yield from Zreceipt.select()
-    finally:
-        database.close()
+def get_receipts() -> Generator[Zreceipt, None, None]:
+    yield from Zreceipt.select()
 
 
-def get_receipt_max_id(path_to_paperless_db: Path) -> int:
-    database.init(path_to_paperless_db / "DocumentWallet.documentwalletsql")
-    try:
-        return Zreceipt.select(fn.MAX(Zreceipt.z_pk)).scalar()
-    finally:
-        database.close()
+def get_receipt_max_id() -> int:
+    return Zreceipt.select(fn.MAX(Zreceipt.z_pk)).scalar()
+
+
+type ReceiptPrimaryKey = int
+type NoteName = str
 
 
 async def export(path_to_paperless_db: Path, out_dir: Path):
-    out_dir_path = create_out_dir(out_dir)
-    attachments_dir_path = create_out_dir(out_dir_path / "_attachments")
+    with PaperlessDatabase(path_to_paperless_db):
+        out_dir_path = create_out_dir(out_dir)
+        attachments_dir_path = create_out_dir(out_dir_path / "_attachments")
 
-    max_id = get_receipt_max_id(path_to_paperless_db)
-    logger.debug(f"Max receipt ID: {max_id}")
-    max_length = len(str(max_id))
+        max_id = get_receipt_max_id()
+        logger.debug(f"Max receipt ID: {max_id}")
+        max_length = len(str(max_id))
 
-    for receipt in get_receipts(path_to_paperless_db):
-        obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
-        yield obsidian_item
-        obsidian_item.save(out_dir_path, attachments_dir_path, max_length)
+        receipt_to_note_name: Dict[ReceiptPrimaryKey, NoteName] = {}
+        for receipt in get_receipts():
+            obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
+            yield obsidian_item
+            note_name = obsidian_item.save(
+                out_dir_path, attachments_dir_path, max_length
+            )
+            receipt_to_note_name[receipt.z_pk] = note_name
 
 
 # see https://forum.obsidian.md/t/valid-characters-for-file-names/55307/3
@@ -119,13 +136,14 @@ class ObsidianItem:
         self.receipt = receipt
         self.path_to_paperless_db = path_to_paperless_db
 
-    def save(self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int):
+    def save(
+        self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int
+    ) -> NoteName:
         title = self.get_document_title()
-        id = self.receipt.z_pk
+        id: ReceiptPrimaryKey = self.receipt.z_pk
 
-        out_file_path = out_dir_path / sanitize_filename_for_obsidian(
-            f"{title} ({id}).md"
-        )
+        note_name: NoteName = sanitize_filename_for_obsidian(f"{title} ({id})")
+        out_file_path = out_dir_path / f"{note_name}.md"
         if out_file_path.exists():
             raise Exception(f"File {out_file_path} already exists")
 
@@ -166,6 +184,7 @@ class ObsidianItem:
             self.transform(linked_attachments=linked_attachments),
             out_file_path,
         )
+        return note_name
 
     def get_document_path(self) -> Path:
         return get_document_path(self.path_to_paperless_db, self.receipt)
