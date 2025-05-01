@@ -1,24 +1,27 @@
 # paperless-exporter
 
-Export from Mariner Paperless (gone out of business)
+Export from Mariner Paperless (gone out of business) to:
 
-![EOL3xy8WsAgRDGW](https://github.com/user-attachments/assets/f90ef4ba-821c-4783-96d3-3c82c717ae4b)
+- [Obsidian](https://obsidian.md/)-compatible Markdown. See:
+  ![paperless](https://github.com/user-attachments/assets/25a937fd-e87c-42b5-9cac-9c8b52cad7b3)
+  becomes
+  ![obsidian graph](https://github.com/user-attachments/assets/76699715-7fd4-4aa1-8308-eeccf1b4dd25)
+  and
+  ![obsidian document](https://github.com/user-attachments/assets/7a6c7b0b-de43-4331-96ca-ae999ecc2927)
 
-to:
-
-- [Obsidian](https://obsidian.md/)-compatible Markdown.
 - Others? Pull requests welcome
 
-## Instructions/Assumptions
+## Features
 
-- Your library is NOT encrypted. If it is encrypted you need to remove
-  the encryption with your password through the app first.
-
-I thoroughly recommend making a backup/copy of you library before
-you mess with it in any way.
+- Document export (library document and original document, fallback to thumbnail)
+- Collection support
+- Tags support
+- Category support
 
 ## Limitations
 
+- Your library is NOT encrypted. If it is encrypted you need to remove
+  the encryption with your password through the app first.
 - This exports only a subset of all fields.
 
 ## Final Disclaimer
