@@ -33,10 +33,6 @@
   languages.python.venv.enable = true;
   languages.python.version = "3.12";
 
-  scripts.clean.exec = ''
-    rm -rf $DEVENV_ROOT/fixtures/out
-  '';
-
   scripts.generate-models.exec = ''
     pushd $DEVENV_ROOT/fixtures/library.paperless >/dev/null
     pwiz.py -e sqlite DocumentWallet.documentwalletsql > ../../src/model.py
@@ -50,7 +46,6 @@
   '';
 
   scripts.test-all.exec = ''
-    clean
     pytest -s -vv "$@"
   '';
 
@@ -61,6 +56,10 @@
   scripts.test-watch.exec = ''
     ptw --onpass "terminal-notifier -message \"Tests passed\" -title \"✅\"" \
       --onfail "terminal-notifier -message \"Tests failed\" -title \"❌\""
+  '';
+
+  scripts.build.exec = ''
+    uv build
   '';
 
   # https://devenv.sh/tests/

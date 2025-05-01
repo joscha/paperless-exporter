@@ -2,12 +2,7 @@ import sys
 import subprocess
 from pathlib import Path
 
-from . import get_tree_string_from_path
-
-
-def assert_tree_snapshot(tmp_path, snapshot):
-    tree_str = get_tree_string_from_path(tmp_path)
-    assert snapshot == tree_str
+from . import assert_tree_snapshot
 
 
 def test_cli_generates_expected_tree(tmp_path, snapshot):
@@ -19,6 +14,6 @@ def test_cli_generates_expected_tree(tmp_path, snapshot):
         text=True,
     )
     # Optionally print result.stdout/result.stderr for debugging
-    snapshot(name="stdout") == result.stdout
-    snapshot(name="stderr") == result.stderr
+    assert snapshot(name="stdout") == result.stdout
+    assert snapshot(name="stderr") == result.stderr
     assert_tree_snapshot(target, snapshot(name="generated_tree"))
