@@ -73,6 +73,10 @@
     ruff.enable = true;
     ruff-format.enable = true;
     typos.enable = true;
+    typos.excludes = [
+      "fixtures/.*"
+      "src/tests/__snapshots__/.*"
+    ];
     yamllint.enable = true;
     yamlfmt.enable = true;
     yamlfmt.settings.lint-only = false;
