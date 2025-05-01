@@ -141,11 +141,11 @@ class ObsidianItem:
         original_files = {
             k: v for k, v in original_files.items() if v is not None and v.exists()
         }
-        if "document" not in original_files:
-            logger.warning(
-                f"Document {document_path} for receipt '{title}' does not exist."
-            )
+
         if len(original_files) == 0:
+            logger.warning(
+                f"Document ({document_path}) AND original ({original_document_path}) for receipt '{title}' (Paperless ID: {id}) do not exist."
+            )
             thumbnail_path = self.get_thumbnail_path()
             if thumbnail_path and thumbnail_path.exists():
                 original_files["thumbnail"] = thumbnail_path
