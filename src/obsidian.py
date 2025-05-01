@@ -2,6 +2,7 @@ import hashlib
 from pathlib import Path
 from shutil import copy
 from typing import Dict, Generator
+import logging
 
 from pathvalidate import sanitize_filename
 from .model import (
@@ -16,6 +17,10 @@ from .model import (
     database,
 )
 from frontmatter import Post, dump
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def get_collection_paths(collection: Zcollection) -> str:
@@ -97,6 +102,10 @@ class ObsidianItem:
         original_files = {
             k: v for k, v in original_files.items() if v is not None and v.exists()
         }
+        if "document" not in original_files:
+            logger.warning(
+                f"Document {document_path} for receipt '{title}' does not exist."
+            )
         if len(original_files) == 0:
             thumbnail_path = self.get_thumbnail_path()
             if thumbnail_path and thumbnail_path.exists():
