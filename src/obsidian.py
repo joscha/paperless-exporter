@@ -86,6 +86,30 @@ async def export(path_to_paperless_db: Path, out_dir: Path):
         obsidian_item.save(out_dir_path, attachments_dir_path, max_length)
 
 
+# see https://forum.obsidian.md/t/valid-characters-for-file-names/55307/3
+OBSIDIAN_SPECIAL_CHARACTERS = list("[]#^|\\/:?")
+
+
+def sanitize_filename_for_obsidian(file_name: str) -> str:
+    """
+    Sanitize a filename for Obsidian by replacing special characters with underscores.
+    """
+    for char in OBSIDIAN_SPECIAL_CHARACTERS:
+        file_name = file_name.replace(char, "_")
+    file_name = sanitize_filename(file_name, replacement_text="_")
+    # Remove any leading or trailing underscores
+    file_name = file_name.strip("_")
+    # Remove any double underscores
+    while "__" in file_name:
+        file_name = file_name.replace("__", "_")
+    # Remove any leading or trailing spaces
+    file_name = file_name.strip()
+    # Remove any leading or trailing dots
+    while file_name.startswith(".") or file_name.endswith("."):
+        file_name = file_name[1:] if file_name.startswith(".") else file_name[:-1]
+    return file_name
+
+
 class ObsidianItem:
     receipt: Zreceipt
     markdown: Post
@@ -98,11 +122,12 @@ class ObsidianItem:
     def save(self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int):
         title = self.get_document_title()
         id = self.receipt.z_pk
-        out_file_path = out_dir_path / sanitize_filename(f"{title}.md")
+
+        out_file_path = out_dir_path / sanitize_filename_for_obsidian(
+            f"{title} ({id}).md"
+        )
         if out_file_path.exists():
-            out_file_path = out_dir_path / sanitize_filename(f"{title} ({id}).md")
-            if out_file_path.exists():
-                raise Exception(f"File {out_file_path} already exists")
+            raise Exception(f"File {out_file_path} already exists")
 
         document_path = self.get_document_path()
         original_document_path = self.get_original_document_path()
@@ -132,7 +157,7 @@ class ObsidianItem:
             if file_hash in seen_hashes:
                 continue
             seen_hashes.add(file_hash)
-            file_out_path = attachments_dir_path / sanitize_filename(
+            file_out_path = attachments_dir_path / sanitize_filename_for_obsidian(
                 f"{prefix}.{file_name}{file_path.suffix}"
             )
             copy(file_path, file_out_path)
