@@ -39,7 +39,7 @@
 # ---
 # name: test_cli_generates_expected_tree[stderr]
   '''
-  Document fixtures/library.paperless/Documents/2025/04/25/07D1AB33-E307-4274-9DBE-C - 25-4-2025.pdf for receipt 'missing' does not exist.
+  Document (fixtures/library.paperless/Documents/2025/04/25/07D1AB33-E307-4274-9DBE-C - 25-4-2025.pdf) AND original (fixtures/library.paperless/Documents/2025/04/25/07D1AB33-E307-4274-9DBE-C - 25-4-2025/dummy (1).pdf) for receipt 'missing' (Paperless ID: 4) do not exist.
   
   '''
 # ---
