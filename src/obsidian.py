@@ -3,7 +3,7 @@ from pathlib import Path
 from shutil import copy
 from typing import AsyncGenerator, Dict, Generator
 import logging
-
+from datetime import datetime
 from pathvalidate import sanitize_filename
 from .model import (
     DataType,
@@ -104,6 +104,10 @@ def get_receipt_max_id() -> int:
     return Zreceipt.select(fn.MAX(Zreceipt.z_pk)).scalar()
 
 
+def format_datetime_utc(dt: datetime, date_only: bool = False) -> str:
+    return dt.date().isoformat() if date_only else dt.isoformat()
+
+
 class ObsidianItem:
     receipt: Zreceipt
     markdown: Post
@@ -127,7 +131,8 @@ class ObsidianItem:
         document_path = self.get_document_path()
         original_document_path = self.get_original_document_path()
         padded_id = str(id).zfill(max_id_length)
-        prefix = f"{self.receipt.zdate.strftime("%Y-%m-%d")}_{padded_id}_{title}"
+        receipt_date = format_datetime_utc(self.receipt.zdate, date_only=True)
+        prefix = f"{receipt_date}_{padded_id}_{title}"
 
         original_files = {
             "document": document_path,
@@ -203,8 +208,9 @@ class ObsidianItem:
         markdown = Post(content="\n".join(content))
         if receipt.zoriginalfilename:
             markdown.metadata["Original filename"] = receipt.zoriginalfilename
-        markdown.metadata["Date"] = receipt.zdate.strftime("%Y-%m-%d")
-        markdown.metadata["Import date"] = receipt.zimportdate.isoformat()
+        receipt_date = format_datetime_utc(self.receipt.zdate, date_only=True)
+        markdown.metadata["Date"] = receipt_date
+        markdown.metadata["Import date"] = format_datetime_utc(receipt.zimportdate)
 
         document_type = receipt.zdatatype.zname
         if document_type:

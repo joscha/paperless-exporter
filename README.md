@@ -24,6 +24,30 @@ Export from Mariner Paperless (gone out of business) to:
   the encryption with your password through the app first.
 - This exports only a subset of all fields.
 
+## Command Line Usage
+
+After installing the package, you can use the CLI to export your Paperless library:
+
+```sh
+paperless-exporter <path-to-paperless-library> <output-folder>
+```
+
+- `<path-to-paperless-library>`: Path to your Paperless library directory
+  (must end in `.paperless` and contain `DocumentWallet.documentwalletsql`).
+- `<output-folder>`: Path to an empty directory where the
+  Obsidian-compatible Markdown library will be generated.
+
+Example:
+
+```sh
+paperless-exporter ~/Documents/library.paperless ~/Documents/obsidian-library
+```
+
+If the output folder does not exist, it will be created.
+If it exists, it must be empty.
+
+Run `paperless-exporter --help` for more information.
+
 ## Final Disclaimer
 
 Feel free to use or improve this, but you do so at your own risk.

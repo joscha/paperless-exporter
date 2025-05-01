@@ -34,13 +34,23 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
 
+[tool.hatch.build]
+include = [
+  "src"
+]
+exclude = [
+  "src/tests",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 
 [tool.uv-dynamic-versioning]
 vcs = "git"
 style = "semver"
+#strict = true
 bump = true
+latest-tag = true
 
 [dependency-groups]
 dev = [
@@ -56,3 +66,6 @@ exclude = ["tests"]
 
 [tool.ruff.lint]
 extend-select = ["T20"]
+
+[project.scripts]
+paperless-exporter = "cli:main"

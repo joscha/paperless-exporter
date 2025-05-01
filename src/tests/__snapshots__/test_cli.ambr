@@ -1,0 +1,51 @@
+# serializer version: 1
+# name: test_cli_generates_expected_tree[generated_tree]
+  '''
+  out/
+  ├── _attachments/
+  │   ├── 2025-04-18_01_sample-invoice.document.pdf
+  │   ├── 2025-04-18_02_wordpress-pdf-invoice-plugin-sample.document.pdf
+  │   ├── 2025-04-24_03_sample-invoice.document.pdf
+  │   ├── 2025-04-24_03_sample-invoice.original.pdf
+  │   ├── 2025-04-25_04_missing.thumbnail.png
+  │   ├── 2025-05-01_05_pdf-test.document.pdf
+  │   ├── 2025-05-01_06_drylab.document.pdf
+  │   ├── 2025-05-01_07_invoicesample.document.pdf
+  │   ├── 2025-05-01_08_PDF_TestPage.document.pdf
+  │   ├── 2025-05-01_09_Get_Started_With_Smallpdf.document.pdf
+  │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
+  │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
+  │   └── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
+  ├── collections/
+  │   ├── Test Folder/
+  │   │   └── Another collection.md
+  │   ├── Library.md
+  │   ├── My collection.md
+  │   └── New Test PDFs.md
+  ├── drylab (6).md
+  ├── Free_Test_Data_100KB_PDF (10).md
+  ├── Get_Started_With_Smallpdf (9).md
+  ├── invoicesample (7).md
+  ├── missing (4).md
+  ├── pdf-test (5).md
+  ├── PDF_TestPage (8).md
+  ├── sample-invoice (1).md
+  ├── sample-invoice (3).md
+  ├── sample_ _with_ special characters _o_ _ (12).md
+  ├── test_pdf_acrobat (11).md
+  └── wordpress-pdf-invoice-plugin-sample (2).md
+  
+  '''
+# ---
+# name: test_cli_generates_expected_tree[stderr]
+  '''
+  Document fixtures/library.paperless/Documents/2025/04/25/07D1AB33-E307-4274-9DBE-C - 25-4-2025.pdf for receipt 'missing' does not exist.
+  
+  '''
+# ---
+# name: test_cli_generates_expected_tree[stdout]
+  '''
+  Export completed successfully.
+  
+  '''
+# ---
