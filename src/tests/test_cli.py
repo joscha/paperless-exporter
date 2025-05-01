@@ -2,8 +2,7 @@ import sys
 import subprocess
 from pathlib import Path
 
-
-from src.tests import get_tree_string_from_path
+from . import get_tree_string_from_path
 
 
 def assert_tree_snapshot(tmp_path, snapshot):
