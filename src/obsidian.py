@@ -5,6 +5,7 @@ from typing import AsyncGenerator, Dict, Generator
 import logging
 from datetime import datetime
 from pathvalidate import sanitize_filename
+from unidecode import unidecode
 from .model import (
     DataType,
     ReceiptCollection,
@@ -78,8 +79,13 @@ def create_out_dir(dir_path: str | Path):
     return dir_path
 
 
-def get_document_path(path_to_paperless_db: Path, receipt: Zreceipt):
-    return path_to_paperless_db / Path(receipt.zpath)
+def get_document_path(
+    path_to_paperless_db: Path, receipt: Zreceipt, should_unidecode: bool = False
+):
+    file_name = receipt.zpath
+    if should_unidecode:
+        file_name = unidecode(file_name)
+    return path_to_paperless_db / Path(file_name)
 
 
 def get_document_title(receipt: Zreceipt):
@@ -136,6 +142,7 @@ class ObsidianItem:
 
         original_files = {
             "document": document_path,
+            "document.unidecode": self.get_document_path(should_unidecode=True),
             "original": original_document_path,
         }
         original_files = {
@@ -144,7 +151,7 @@ class ObsidianItem:
 
         if len(original_files) == 0:
             logger.warning(
-                f"Document ({document_path}) AND original ({original_document_path}) for receipt '{title}' (Paperless ID: {id}) do not exist."
+                f"No documents exist for receipt '{title}' (Paperless ID: {id}; Document path: {document_path})."
             )
             thumbnail_path = self.get_thumbnail_path()
             if thumbnail_path and thumbnail_path.exists():
@@ -168,8 +175,10 @@ class ObsidianItem:
         )
         return note_name
 
-    def get_document_path(self) -> Path:
-        return get_document_path(self.path_to_paperless_db, self.receipt)
+    def get_document_path(self, should_unidecode: bool = False) -> Path:
+        return get_document_path(
+            self.path_to_paperless_db, self.receipt, should_unidecode
+        )
 
     def get_original_document_path(self) -> Path | None:
         if self.receipt.zoriginalfilename:
@@ -194,7 +203,6 @@ class ObsidianItem:
 
     def transform(self, linked_attachments: Dict[str, Path] = None) -> Post:
         receipt = self.receipt
-        document_path = self.get_document_path()
         content = []
         if receipt.znotes:
             content.append(receipt.znotes.strip())
@@ -249,9 +257,19 @@ class ObsidianItem:
         if receipt.zocrattemptedvalue == 1 and receipt.zocrresult:
             markdown.metadata["OCR result"] = receipt.zocrresult
 
-        document_exists = document_path.exists()
-
         tags = ["paperless"]
+
+        document_paths = [
+            self.get_document_path(),
+            self.get_document_path(should_unidecode=True),
+        ]
+        document_exists = False
+        for document_path in document_paths:
+            document_exists = document_path.exists()
+            if document_exists:
+                markdown.metadata["source"] = document_path.absolute().as_uri()
+                break
+
         if document_type:
             tags.append(f"paperless-type-{document_type.strip().lower()}")
         if not document_exists:
@@ -262,9 +280,6 @@ class ObsidianItem:
                 tags.append(tag.tag.zname.strip().lower())
         if tags:
             markdown.metadata["tags"] = tags
-
-        if document_exists:
-            markdown.metadata["source"] = document_path.absolute().as_uri()
 
         if receipt.zinboxvalue == 1:
             markdown.metadata["In inbox"] = True

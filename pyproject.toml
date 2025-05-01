@@ -8,6 +8,7 @@ dependencies = [
     "pathvalidate>=3.2.3",
     "peewee>=3.17.9",
     "python-frontmatter>=1.1.0",
+    "unidecode>=1.4.0",
 ]
 authors = [{ name = "Joscha Feth" }]
 maintainers = [
@@ -23,9 +24,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-
-[tool.uv]
-resolution = "lowest-direct"
 
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]
