@@ -249,6 +249,64 @@
     ]),
   })
 # ---
+# name: test_export.12
+  dict({
+    'Collections': list([
+      'Library',
+    ]),
+    'Date': '2025-05-01',
+    'Import date': '2025-05-01T09:29:55.838063+00:00',
+    'OCR result': '''
+      Sample PDF
+      This is a simple PDF file. Fun fun fun.
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus facilisis odio sed mi.
+      Curabitur suscipit. Nullam vel nisi. Etiam semper ipsum ut lectus. Proin aliquam, erat eget
+      pharetra commodo, eros mi condimentum quam, sed commodo justo quam ut velit.
+      Integer a erat. Cras laoreet ligula cursus enim. Aenean scelerisque velit et tellus.
+      Vestibulum dictum aliquet sem. Nulla facilisi. Vestibulum accumsan ante vitae elit. Nulla
+      erat dolor, blandit in, rutrum quis, semper pulvinar, enim. Nullam varius congue risus.
+      Vivamus sollicitudin, metus ut interdum eleifend, nisi tellus pellentesque elit, tristique
+      accumsan eros quam et risus. Suspendisse libero odio, mattis sit amet, aliquet eget,
+      hendrerit vel, nulla. Sed vitae augue. Aliquam erat volutpat. Aliquam feugiat vulputate nisl.
+      Suspendisse quis nulla pretium ante pretium mollis. Proin velit ligula, sagittis at, egestas a,
+      pulvinar quis, nisl.
+      Pellentesque sit amet lectus. Praesent pulvinar, nunc quis iaculis sagittis, justo quam
+      lobortis tortor, sed vestibulum dui metus venenatis est. Nunc cursus ligula. Nulla facilisi.
+      Phasellus ullamcorper consectetuer ante. Duis tincidunt, urna id condimentum luctus, nibh
+      ante vulputate sapien, id sagittis massa orci ut enim. Pellentesque vestibulum convallis
+      sem. Nulla consequat quam ut nisl. Nullam est. Curabitur tincidunt dapibus lorem. Proin
+      velit turpis, scelerisque sit amet, iaculis nec, rhoncus ac, ipsum. Phasellus lorem arcu,
+      feugiat eu, gravida eu, consequat molestie, ipsum. Nullam vel est ut ipsum volutpat
+      feugiat. Aenean pellentesque.
+      In mauris. Pellentesque dui nisi, iaculis eu, rhoncus in, venenatis ac, ante. Ut odio justo,
+      scelerisque vel, facilisis non, commodo a, pede. Cras nec massa sit amet tortor volutpat
+      varius. Donec lacinia, neque a luctus aliquet, pede massa imperdiet ante, at varius lorem
+      pede sed sapien. Fusce erat nibh, aliquet in, eleifend eget, commodo eget, erat. Fusce
+      consectetuer. Cras risus tortor, porttitor nec, tristique sed, convallis semper, eros. Fusce
+      vulputate ipsum a mauris. Phasellus mollis. Curabitur sed urna. Aliquam nec sapien non
+      nibh pulvinar convallis. Vivamus facilisis augue quis quam. Proin cursus aliquet metus.
+      Suspendisse lacinia. Nulla at tellus ac turpis eleifend scelerisque. Maecenas a pede vitae
+      enim commodo interdum. Donec odio. Sed sollicitudin dui vitae justo.
+      Morbi elit nunc, facilisis a, mollis a, molestie at, lectus. Suspendisse eget mauris eu tellus
+      molestie cursus. Duis ut magna at justo dignissim condimentum. Cum sociis natoque
+      penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus varius. Ut sit
+      amet diam suscipit mauris ornare aliquam. Sed varius. Duis arcu. Etiam tristique massa
+      eget dui. Phasellus congue. Aenean est erat, tincidunt eget, venenatis quis, commodo at,
+      quam.
+    ''',
+    'Original filename': 'sample.pdf',
+    'Type': 'Document',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+      #### original
+      ![[linked_attachment.original.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+    ]),
+  })
+# ---
 # name: test_export.2
   dict({
     'Amount': 93.5,
@@ -805,18 +863,20 @@
   │   ├── 2025-05-01_08_PDF_TestPage.document.pdf
   │   ├── 2025-05-01_09_Get_Started_With_Smallpdf.document.pdf
   │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
-  │   └── 2025-05-01_11_test_pdf_acrobat.document.pdf
-  ├── drylab.md
-  ├── Free_Test_Data_100KB_PDF.md
-  ├── Get_Started_With_Smallpdf.md
-  ├── invoicesample.md
-  ├── missing.md
-  ├── pdf-test.md
-  ├── PDF_TestPage.md
+  │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
+  │   └── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
+  ├── drylab (6).md
+  ├── Free_Test_Data_100KB_PDF (10).md
+  ├── Get_Started_With_Smallpdf (9).md
+  ├── invoicesample (7).md
+  ├── missing (4).md
+  ├── pdf-test (5).md
+  ├── PDF_TestPage (8).md
+  ├── sample-invoice (1).md
   ├── sample-invoice (3).md
-  ├── sample-invoice.md
-  ├── test_pdf_acrobat.md
-  └── wordpress-pdf-invoice-plugin-sample.md
+  ├── sample_ _with_ special characters _o_ _ (12).md
+  ├── test_pdf_acrobat (11).md
+  └── wordpress-pdf-invoice-plugin-sample (2).md
   
   '''
 # ---
