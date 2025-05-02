@@ -47,6 +47,7 @@
 # ---
 # name: test_cli_generates_expected_tree[stdout]
   '''
+  Found 13 receipts to export.
   Export completed successfully.
   
   '''

@@ -334,6 +334,11 @@ class ExportResult:
     collection_items: list[CollectionItem] = []
 
 
+def get_receipt_count(path_to_paperless_db: Path) -> int:
+    with PaperlessDatabase(path_to_paperless_db):
+        return Zreceipt.select().count()
+
+
 async def export(
     path_to_paperless_db: Path, out_dir: Path
 ) -> AsyncGenerator[ObsidianItem | CollectionItem, None]:
