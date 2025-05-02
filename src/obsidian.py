@@ -4,8 +4,8 @@ from shutil import copy
 from typing import AsyncGenerator, Dict, Generator
 import logging
 from datetime import datetime
+import unicodedata
 from pathvalidate import sanitize_filename
-from unidecode import unidecode
 from .model import (
     DataType,
     ReceiptCollection,
@@ -79,12 +79,38 @@ def create_out_dir(dir_path: str | Path):
     return dir_path
 
 
+_umlaut_map = str.maketrans(
+    {
+        "ä": "ae",
+        "Ä": "Ae",
+        "ö": "oe",
+        "Ö": "Oe",
+        "ü": "ue",
+        "Ü": "Ue",
+        "ß": "ss",
+    }
+)
+
+
+def german_to_ascii(s: str) -> str:
+    # 1) normalize so that any combining forms become precomposed
+    s = unicodedata.normalize("NFC", s)
+    # 2) transliterate via our map
+    return s.translate(_umlaut_map)
+
+
+def unidecode_filename(file_name: str) -> str:
+    # Mariner Paperless follows the German rules for Umlauts
+    file_name = german_to_ascii(file_name)
+    return file_name
+
+
 def get_document_path(
     path_to_paperless_db: Path, receipt: Zreceipt, should_unidecode: bool = False
 ):
     file_name = receipt.zpath
     if should_unidecode:
-        file_name = unidecode(file_name)
+        file_name = unidecode_filename(file_name)
     return path_to_paperless_db / Path(file_name)
 
 
@@ -135,7 +161,6 @@ class ObsidianItem:
             raise Exception(f"File {out_file_path} already exists")
 
         document_path = self.get_document_path()
-        original_document_path = self.get_original_document_path()
         padded_id = str(id).zfill(max_id_length)
         receipt_date = format_datetime_utc(self.receipt.zdate, date_only=True)
         prefix = f"{receipt_date}_{padded_id}_{title}"
@@ -143,7 +168,7 @@ class ObsidianItem:
         original_files = {
             "document": document_path,
             "document.unidecode": self.get_document_path(should_unidecode=True),
-            "original": original_document_path,
+            "original": self.get_original_document_path(),
         }
         original_files = {
             k: v for k, v in original_files.items() if v is not None and v.exists()

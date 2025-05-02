@@ -16,7 +16,7 @@
   │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
   │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
   │   ├── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
-  │   └── 2025-05-01_13_file-sample_150kB_mit_Ümläutön.document.pdf
+  │   └── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
   ├── collections/
   │   ├── Test Folder/
   │   │   └── Another collection.md
@@ -24,7 +24,7 @@
   │   ├── My collection.md
   │   └── New Test PDFs.md
   ├── drylab (6).md
-  ├── file-sample_150kB_mit_Ümläutön (13).md
+  ├── file-sample_150kB_mit_ü (13).md
   ├── Free_Test_Data_100KB_PDF (10).md
   ├── Get_Started_With_Smallpdf (9).md
   ├── invoicesample (7).md
