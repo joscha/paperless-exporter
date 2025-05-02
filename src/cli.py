@@ -2,8 +2,9 @@ import argparse
 import sys
 from pathlib import Path
 import asyncio
+from tqdm.asyncio import tqdm
 
-from .obsidian import export
+from .obsidian import export, get_receipt_count
 
 
 def validate_paperless_library(path: Path) -> Path:
@@ -47,12 +48,28 @@ def main():
         type=lambda p: validate_empty_or_create(Path(p)),
         help="Path to the output folder (must not exist or must be empty).",
     )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Disable progress bar during export.",
+    )
 
     args = parser.parse_args()
 
     async def run_export():
-        async for _ in export(args.source, args.target):
-            pass
+        count = get_receipt_count(args.source)
+        if count == 0:
+            print("No receipts found in the source library.", file=sys.stderr)  # noqa T201
+            sys.exit(1)
+        print(f"Found {count} receipts to export.")  # noqa T201
+
+        generator = export(args.source, args.target)
+        if args.no_progress:
+            async for _ in generator:
+                pass
+        else:
+            async for _ in tqdm(generator, total=count, desc="Exporting"):
+                pass
 
     # Run the export
     try:

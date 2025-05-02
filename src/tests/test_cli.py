@@ -9,7 +9,7 @@ def test_cli_generates_expected_tree(tmp_path, snapshot):
     source = Path("fixtures/library.paperless")
     target = tmp_path / "out"
     result = subprocess.run(
-        [sys.executable, "-m", "src.cli", str(source), str(target)],
+        [sys.executable, "-m", "src.cli", "--no-progress", str(source), str(target)],
         capture_output=True,
         text=True,
     )
