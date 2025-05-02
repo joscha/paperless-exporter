@@ -1,5 +1,7 @@
 # paperless-exporter
 
+[![PyPI version](https://img.shields.io/pypi/v/paperless-exporter)](https://pypi.org/project/paperless-exporter/)
+
 Export from Mariner Paperless (gone out of business) to:
 
 - [Obsidian](https://obsidian.md/)-compatible Markdown. See:
