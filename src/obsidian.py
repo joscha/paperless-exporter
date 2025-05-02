@@ -187,13 +187,13 @@ class ObsidianItem:
         """Set category and subcategory metadata and tags."""
         try:
             markdown.metadata["Category"] = self.receipt.zcategory.zname
-            tags.add(self.receipt.zcategory.zname, allow_slashes=True)
+            tags.add(self.receipt.zcategory.zname, allow_slashes=False)
         except Zcategory.DoesNotExist:
             pass
 
         try:
             markdown.metadata["Subcategory"] = self.receipt.zsubcategory.zname
-            tags.add(self.receipt.zsubcategory.zname, allow_slashes=True)
+            tags.add(self.receipt.zsubcategory.zname, allow_slashes=False)
         except Zsubcategory.DoesNotExist:
             pass
 

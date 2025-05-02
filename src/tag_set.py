@@ -32,10 +32,10 @@ class TagSet(Set[str]):
         """Slugify a tag while preserving Unicode characters."""
         return slugify(tag, separator="-", lowercase=True, allow_unicode=True)
 
-    def _format_tag(self, tag: str, allow_slashes: bool = False) -> str:
+    def _format_tag(self, tag: str, allow_slashes: bool = True) -> str:
         """Format a tag according to the rules."""
 
-        if allow_slashes:
+        if not allow_slashes:
             tag = self._slugify_tag(tag)
             return self._sanitize_tag(tag)
 
@@ -51,7 +51,7 @@ class TagSet(Set[str]):
         tag = "/".join(formatted_parts)
         return self._sanitize_tag(tag)
 
-    def add(self, element: str, allow_slashes: bool = False) -> None:
+    def add(self, element: str, allow_slashes: bool = True) -> None:
         """Add a tag to the set, automatically formatting it."""
         super().add(self._format_tag(element, allow_slashes))
 
