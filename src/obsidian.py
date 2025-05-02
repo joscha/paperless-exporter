@@ -19,7 +19,7 @@ from .model import (
 )
 from frontmatter import Post, dump
 from peewee import fn, SqliteDatabase
-from slugify import slugify
+from .tag_set import TagSet
 
 
 logger = logging.getLogger(__name__)
@@ -250,7 +250,7 @@ class ObsidianItem:
         if document_type:
             markdown.metadata["Type"] = document_type
 
-        tags = ["paperless"]
+        tags = TagSet(["paperless"])
 
         collections = []
         for receipt_collection in receipt.collections:
@@ -260,20 +260,20 @@ class ObsidianItem:
                 continue
             collection_paths = get_collection_paths(receipt_collection.collection)
             collections.append("/".join(collection_paths))
-            tags.extend([slugify(coll) for coll in collection_paths])
+            tags.update(collection_paths)
 
         if collections:
             markdown.metadata["Collection paths"] = collections
 
         try:
             markdown.metadata["Category"] = receipt.zcategory.zname
-            tags.append(slugify(receipt.zcategory.zname))
+            tags.add(receipt.zcategory.zname)
         except Zcategory.DoesNotExist:
             pass
 
         try:
             markdown.metadata["Subcategory"] = receipt.zsubcategory.zname
-            tags.append(slugify(receipt.zsubcategory.zname))
+            tags.add(receipt.zsubcategory.zname)
         except Zsubcategory.DoesNotExist:
             pass
 
@@ -302,13 +302,13 @@ class ObsidianItem:
                 break
 
         if document_type:
-            tags.append(f"paperless-type-{slugify(document_type)}")
+            tags.add(f"paperless-type-{document_type}")
         if not document_exists:
-            tags.append("paperless-document-missing")
+            tags.add("paperless-document-missing")
         for tag in receipt.receipt_tags:
             assert isinstance(tag, ReceiptTag)
             if tag.tag.zname:
-                tags.append(slugify(tag.tag.zname))
+                tags.add(tag.tag.zname)
         if tags:
             markdown.metadata["tags"] = set(tags)
 
