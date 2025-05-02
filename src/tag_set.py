@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Set
+from typing import Any, Iterable, Iterator, Set
 from slugify import slugify
 import re
 
@@ -7,9 +7,11 @@ class TagSet(Set[str]):
     """A set of tags that automatically formats strings when they are added.
 
     Formatting rules:
-    1. Preserves forward slashes (/) in tags
-    2. Slugifies other special characters
+    1. Preserves forward slashes (/) in tags by default
+    2. Slugifies other special characters (except unicode characters like "ü", etc.)
     3. Prefixes tags with underscore (_) if all of the tag is numeric
+    4. Removes duplicates
+    5. Sorts tags alphabetically
     """
 
     def __init__(self, iterable: Iterable[str] = None):
@@ -74,3 +76,7 @@ class TagSet(Set[str]):
     def discard(self, element: str) -> None:
         """Discard a tag from the set, automatically formatting it."""
         super().discard(self._format_tag(element))
+
+    def __iter__(self) -> Iterator[str]:
+        """Iterate over the tags, automatically sorting them."""
+        return iter(sorted(super().__iter__()))

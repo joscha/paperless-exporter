@@ -150,9 +150,7 @@ class ObsidianItem:
         self._set_document_metadata(markdown, tags, copied_files)
         self._set_status_metadata(markdown)
 
-        tag_list = list(tags)
-        tag_list.sort()
-        markdown.metadata["tags"] = tag_list
+        markdown.metadata["tags"] = list(tags)
         return markdown
 
     def _set_basic_metadata(self, markdown: Post) -> None:
