@@ -253,9 +253,17 @@ def get_receipt_count(path_to_paperless_db: Path) -> int:
         return Zreceipt.select().count()
 
 
-def get_collection_count(path_to_paperless_db: Path) -> int:
+def get_collections_with_receipts(path_to_paperless_db: Path) -> list[Zcollection]:
     with PaperlessDatabase(path_to_paperless_db):
-        return Zcollection.select().count()
+        return list(Zcollection.select().join(ReceiptCollection).distinct())
+
+
+def get_collection_with_receipts_count(path_to_paperless_db: Path) -> int:
+    """Count collections that have at least one receipt."""
+    with PaperlessDatabase(path_to_paperless_db):
+        return (
+            Zcollection.select().join(ReceiptCollection).group_by(Zcollection).count()
+        )
 
 
 async def export(
@@ -279,10 +287,8 @@ async def export(
             )
             receipt_to_note_name[receipt.z_pk] = note_name
 
-        for collection in Zcollection.select():
+        for collection in get_collections_with_receipts(path_to_paperless_db):
             receipt_collections: list[ReceiptCollection] = collection.receipts
-            if not receipt_collections or len(receipt_collections) == 0:
-                continue
             collection_path = Path(out_dir_path / "collections")
             paths = get_collection_paths(collection)
             for collection_path_part in paths[:-1]:

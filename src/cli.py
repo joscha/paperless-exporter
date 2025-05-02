@@ -3,14 +3,13 @@ import sys
 from pathlib import Path
 import asyncio
 from tqdm.asyncio import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
 
 from .obsidian import (
     CollectionItem,
     ObsidianItem,
     export,
-    get_collection_count,
     get_receipt_count,
+    get_collection_with_receipts_count,
 )
 
 
@@ -75,25 +74,28 @@ def main():
             async for _ in generator:
                 pass
         else:
-            collection_count = get_collection_count(args.source)
-            with logging_redirect_tqdm():
-                # Create a progress bar for documents
-                doc_progress = tqdm(total=count, desc="Exporting documents", position=0)
-                # Create a progress bar for collections
-                collection_progress = tqdm(
-                    total=collection_count,
-                    desc="Linking documents to collections",
-                    position=1,
-                )
+            # Create progress bars
+            document_progress = tqdm(
+                total=count,
+                desc="Exporting documents",
+                unit="document",
+                disable=args.no_progress,
+            )
+            collection_progress = tqdm(
+                total=get_collection_with_receipts_count(args.source),
+                desc="Linking documents to collections",
+                unit="collection",
+                disable=args.no_progress,
+            )
 
-                async for item in generator:
-                    if isinstance(item, ObsidianItem):
-                        doc_progress.update(1)
-                    elif isinstance(item, CollectionItem):
-                        collection_progress.update(1)
+            async for item in generator:
+                if isinstance(item, ObsidianItem):
+                    document_progress.update(1)
+                elif isinstance(item, CollectionItem):
+                    collection_progress.update(1)
 
-                doc_progress.close()
-                collection_progress.close()
+            document_progress.close()
+            collection_progress.close()
 
     # Run the export
     try:
