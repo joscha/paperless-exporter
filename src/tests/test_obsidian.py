@@ -8,8 +8,6 @@ from ..obsidian import (
     CollectionItem,
     ObsidianItem,
     export,
-    german_to_ascii,
-    unidecode_filename,
 )
 
 
@@ -30,13 +28,3 @@ async def test_export(tmp_path, snapshot):
             assert snapshot(name=f"collection_{item.collection.z_pk}") == item.markdown
 
     assert_tree_snapshot(tmp_path, snapshot(name="tree"))
-
-
-def test_unidecode():
-    assert german_to_ascii("Geburtstagsgrüße") == "Geburtstagsgruesse"
-    assert (
-        unidecode_filename(
-            "sparhandy 2012-05-25  BASE Internet-Flat (500MB) für effektiv 0,21€ pro Monat inkl. UMTS-Stick - myDealZ.de — myDealZ.de - 25.05.12.pdf"
-        )
-        == "sparhandy 2012-05-25  BASE Internet-Flat (500MB) fuer effektiv 0,21€ pro Monat inkl. UMTS-Stick - myDealZ.de — myDealZ.de - 25.05.12.pdf"
-    )
