@@ -19,6 +19,7 @@ from .model import (
 )
 from frontmatter import Post, dump
 from peewee import fn, SqliteDatabase
+from slugify import slugify
 
 
 logger = logging.getLogger(__name__)
@@ -64,7 +65,7 @@ def sanitize_filename_for_obsidian(file_name: str) -> str:
     return file_name
 
 
-def get_collection_paths(collection: Zcollection) -> str:
+def get_collection_paths(collection: Zcollection) -> list[str]:
     paths = []
     while collection:
         paths.insert(0, collection.zname)
@@ -249,12 +250,17 @@ class ObsidianItem:
         if document_type:
             markdown.metadata["Type"] = document_type
 
+        tags = ["paperless"]
+
         collections = []
         for receipt_collection in receipt.collections:
             assert isinstance(receipt_collection, ReceiptCollection)
-            collections.append(
-                "/".join(get_collection_paths(receipt_collection.collection))
-            )
+            if receipt_collection.collection.z_pk == 1:
+                # ignore the "Library" collection
+                continue
+            collection_paths = get_collection_paths(receipt_collection.collection)
+            collections.append("/".join(collection_paths))
+            tags.extend([slugify(coll) for coll in collection_paths])
 
         if collections:
             markdown.metadata["Collection paths"] = collections
@@ -282,8 +288,6 @@ class ObsidianItem:
         if receipt.zocrattemptedvalue == 1 and receipt.zocrresult:
             markdown.metadata["OCR result"] = receipt.zocrresult
 
-        tags = ["paperless"]
-
         document_paths = [
             self.get_document_path(),
             self.get_document_path(should_unidecode=True),
@@ -296,15 +300,15 @@ class ObsidianItem:
                 break
 
         if document_type:
-            tags.append(f"paperless-type-{document_type.strip().lower()}")
+            tags.append(f"paperless-type-{slugify(document_type)}")
         if not document_exists:
             tags.append("paperless-document-missing")
         for tag in receipt.receipt_tags:
             assert isinstance(tag, ReceiptTag)
             if tag.tag.zname:
-                tags.append(tag.tag.zname.strip().lower())
+                tags.append(slugify(tag.tag.zname))
         if tags:
-            markdown.metadata["tags"] = tags
+            markdown.metadata["tags"] = set(tags)
 
         if receipt.zinboxvalue == 1:
             markdown.metadata["In inbox"] = True
