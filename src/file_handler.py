@@ -1,7 +1,7 @@
 import hashlib
 from pathlib import Path
 from shutil import copy
-from typing import Dict
+from typing import Dict, Tuple
 from .utils import sanitize_filename_for_obsidian
 
 
@@ -26,11 +26,15 @@ class FileHandler:
         copy(file_path, file_out_path)
         return file_out_path.relative_to(self.out_dir_path)
 
-    def copy_files(self, files: Dict[str, Path], prefix: str) -> Dict[str, Path]:
+    def copy_files(
+        self, files: Dict[str, Path], prefix: str
+    ) -> Tuple[Dict[str, Path], Dict[str, Path]]:
         """Copy multiple files to the attachments directory."""
         linked_attachments = {}
+        copied_files = {}
         for file_name, file_path in files.items():
             relative_path = self.copy_file(file_name, file_path, prefix)
             if relative_path:
                 linked_attachments[file_name] = relative_path
-        return linked_attachments
+                copied_files[file_name] = file_path
+        return linked_attachments, copied_files

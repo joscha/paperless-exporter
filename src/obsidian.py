@@ -110,10 +110,14 @@ class ObsidianItem:
                 original_files["thumbnail"] = thumbnail_path
 
         file_handler = FileHandler(out_dir_path, attachments_dir_path)
-        linked_attachments = file_handler.copy_files(original_files, prefix)
+        linked_attachments, copied_files = file_handler.copy_files(
+            original_files, prefix
+        )
 
         dump(
-            self.transform(linked_attachments=linked_attachments),
+            self.transform(
+                linked_attachments=linked_attachments, copied_files=copied_files
+            ),
             out_file_path,
         )
         return note_name
@@ -121,7 +125,11 @@ class ObsidianItem:
     def get_document_title(self) -> str:
         return get_document_title(self.receipt)
 
-    def transform(self, linked_attachments: Dict[str, Path] = None) -> Post:
+    def transform(
+        self,
+        linked_attachments: Dict[str, Path] = None,
+        copied_files: Dict[str, Path] = None,
+    ) -> Post:
         receipt = self.receipt
         content = []
         if receipt.znotes:
@@ -139,10 +147,10 @@ class ObsidianItem:
         self._set_collection_metadata(markdown, tags)
         self._set_category_metadata(markdown, tags)
         self._set_receipt_metadata(markdown)
-        self._set_document_metadata(markdown, tags)
+        self._set_document_metadata(markdown, tags, copied_files)
         self._set_status_metadata(markdown)
 
-        markdown.metadata["tags"] = set(tags)
+        markdown.metadata["tags"] = list(tags)
         return markdown
 
     def _set_basic_metadata(self, markdown: Post) -> None:
@@ -162,12 +170,13 @@ class ObsidianItem:
         collections = []
         for receipt_collection in self.receipt.collections:
             assert isinstance(receipt_collection, ReceiptCollection)
-            if receipt_collection.collection.z_pk == 1:
+            if receipt_collection.collection.ztype == 0:
                 # ignore the "Library" collection
                 continue
             collection_paths = get_collection_paths(receipt_collection.collection)
-            collections.append("/".join(collection_paths))
-            tags.update(collection_paths)
+            collection_path = "/".join(collection_paths)
+            collections.append(collection_path)
+            tags.add(collection_path)
 
         if collections:
             markdown.metadata["Collection paths"] = collections
@@ -176,13 +185,13 @@ class ObsidianItem:
         """Set category and subcategory metadata and tags."""
         try:
             markdown.metadata["Category"] = self.receipt.zcategory.zname
-            tags.add(self.receipt.zcategory.zname)
+            tags.add(self.receipt.zcategory.zname, allow_slashes=False)
         except Zcategory.DoesNotExist:
             pass
 
         try:
             markdown.metadata["Subcategory"] = self.receipt.zsubcategory.zname
-            tags.add(self.receipt.zsubcategory.zname)
+            tags.add(self.receipt.zsubcategory.zname, allow_slashes=False)
         except Zsubcategory.DoesNotExist:
             pass
 
@@ -198,28 +207,25 @@ class ObsidianItem:
             if self.receipt.ztaxamount is not None:
                 markdown.metadata["Tax/VAT"] = self.receipt.ztaxamount
 
-    def _set_document_metadata(self, markdown: Post, tags: TagSet) -> None:
+    def _set_document_metadata(
+        self, markdown: Post, tags: TagSet, copied_files: Dict[str, Path]
+    ) -> None:
         """Set document-specific metadata and tags."""
         document_type = self.receipt.zdatatype.zname
 
         if self.receipt.zocrattemptedvalue == 1 and self.receipt.zocrresult:
             markdown.metadata["OCR result"] = self.receipt.zocrresult
 
-        document_paths = [
-            self.document_path.get_document_path(),
-            self.document_path.get_document_path(should_unidecode=True),
-        ]
-        document_exists = False
-        for document_path in document_paths:
-            document_exists = document_path.exists()
-            if document_exists:
-                markdown.metadata["source"] = document_path.absolute().as_uri()
-                break
+        document_exists = copied_files and len(copied_files) > 0
+        if document_exists:
+            first_key = next(iter(copied_files))
+            first_value = copied_files[first_key]
+            markdown.metadata["source"] = first_value.absolute().as_uri()
 
         if document_type:
-            tags.add(f"paperless-type-{document_type}")
+            tags.add(f"paperless/type/{document_type}")
         if not document_exists:
-            tags.add("paperless-document-missing")
+            tags.add("paperless/missing/document")
         for tag in self.receipt.receipt_tags:
             assert isinstance(tag, ReceiptTag)
             if tag.tag.zname:
