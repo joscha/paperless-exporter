@@ -1,11 +1,6 @@
-import hashlib
 from pathlib import Path
-from shutil import copy
 from typing import AsyncGenerator, Dict, Generator
 import logging
-from datetime import datetime
-import unicodedata
-from pathvalidate import sanitize_filename
 from .model import (
     DataType,
     ReceiptCollection,
@@ -20,6 +15,9 @@ from .model import (
 from frontmatter import Post, dump
 from peewee import fn, SqliteDatabase
 from .tag_set import TagSet
+from .document_path import DocumentPath
+from .file_handler import FileHandler
+from .utils import format_datetime_utc, create_out_dir, sanitize_filename_for_obsidian
 
 
 logger = logging.getLogger(__name__)
@@ -46,73 +44,12 @@ class PaperlessDatabase(SqliteDatabase):
         return False
 
 
-# see https://forum.obsidian.md/t/valid-characters-for-file-names/55307/3
-OBSIDIAN_SPECIAL_CHARACTERS = list("[]#^|\\/:?")
-
-
-def sanitize_filename_for_obsidian(file_name: str) -> str:
-    """
-    Sanitize a filename for Obsidian by replacing special characters with underscores.
-    """
-    for char in OBSIDIAN_SPECIAL_CHARACTERS:
-        file_name = file_name.replace(char, "_")
-    file_name = sanitize_filename(file_name, replacement_text="_")
-    # Remove any leading or trailing underscores
-    file_name = file_name.strip("_")
-    # Remove any double underscores
-    while "__" in file_name:
-        file_name = file_name.replace("__", "_")
-    return file_name
-
-
 def get_collection_paths(collection: Zcollection) -> list[str]:
     paths = []
     while collection:
         paths.insert(0, collection.zname)
         collection = collection.parent
     return paths
-
-
-def create_out_dir(dir_path: str | Path):
-    if isinstance(dir_path, str):
-        dir_path = Path(dir_path)
-    dir_path.mkdir(parents=True, exist_ok=True)
-    return dir_path
-
-
-_umlaut_map = str.maketrans(
-    {
-        "ä": "ae",
-        "Ä": "Ae",
-        "ö": "oe",
-        "Ö": "Oe",
-        "ü": "ue",
-        "Ü": "Ue",
-        "ß": "ss",
-    }
-)
-
-
-def german_to_ascii(s: str) -> str:
-    # 1) normalize so that any combining forms become precomposed
-    s = unicodedata.normalize("NFC", s)
-    # 2) transliterate via our map
-    return s.translate(_umlaut_map)
-
-
-def unidecode_filename(file_name: str) -> str:
-    # Mariner Paperless follows the German rules for Umlauts
-    file_name = german_to_ascii(file_name)
-    return file_name
-
-
-def get_document_path(
-    path_to_paperless_db: Path, receipt: Zreceipt, should_unidecode: bool = False
-):
-    file_name = receipt.zpath
-    if should_unidecode:
-        file_name = unidecode_filename(file_name)
-    return path_to_paperless_db / Path(file_name)
 
 
 def get_document_title(receipt: Zreceipt):
@@ -137,18 +74,16 @@ def get_receipt_max_id() -> int:
     return Zreceipt.select(fn.MAX(Zreceipt.z_pk)).scalar()
 
 
-def format_datetime_utc(dt: datetime, date_only: bool = False) -> str:
-    return dt.date().isoformat() if date_only else dt.isoformat()
-
-
 class ObsidianItem:
     receipt: Zreceipt
     markdown: Post
     path_to_paperless_db: Path
+    document_path: DocumentPath
 
     def __init__(self, receipt: Zreceipt, path_to_paperless_db: Path):
         self.receipt = receipt
         self.path_to_paperless_db = path_to_paperless_db
+        self.document_path = DocumentPath(path_to_paperless_db, receipt)
 
     def save(
         self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int
@@ -161,68 +96,27 @@ class ObsidianItem:
         if out_file_path.exists():
             raise Exception(f"File {out_file_path} already exists")
 
-        document_path = self.get_document_path()
         padded_id = str(id).zfill(max_id_length)
         receipt_date = format_datetime_utc(self.receipt.zdate, date_only=True)
         prefix = f"{receipt_date}_{padded_id}_{title}"
 
-        original_files = {
-            "document": document_path,
-            "document.unidecode": self.get_document_path(should_unidecode=True),
-            "original": self.get_original_document_path(),
-        }
-        original_files = {
-            k: v for k, v in original_files.items() if v is not None and v.exists()
-        }
-
+        original_files = self.document_path.get_all_paths()
         if len(original_files) == 0:
             logger.warning(
-                f"No documents exist for receipt '{title}' (Paperless ID: {id}; Document path: {document_path})."
+                f"No documents exist for receipt '{title}' (Paperless ID: {id}; Document path: {self.document_path.get_document_path()})."
             )
-            thumbnail_path = self.get_thumbnail_path()
+            thumbnail_path = self.document_path.get_thumbnail_path()
             if thumbnail_path and thumbnail_path.exists():
                 original_files["thumbnail"] = thumbnail_path
 
-        linked_attachments = {}
-        seen_hashes = set()
-        for file_name, file_path in original_files.items():
-            file_hash = hashlib.md5(file_path.read_bytes()).hexdigest()
-            if file_hash in seen_hashes:
-                continue
-            seen_hashes.add(file_hash)
-            file_out_path = attachments_dir_path / sanitize_filename_for_obsidian(
-                f"{prefix}.{file_name}{file_path.suffix}"
-            )
-            copy(file_path, file_out_path)
-            linked_attachments[file_name] = file_out_path.relative_to(out_dir_path)
+        file_handler = FileHandler(out_dir_path, attachments_dir_path)
+        linked_attachments = file_handler.copy_files(original_files, prefix)
+
         dump(
             self.transform(linked_attachments=linked_attachments),
             out_file_path,
         )
         return note_name
-
-    def get_document_path(self, should_unidecode: bool = False) -> Path:
-        return get_document_path(
-            self.path_to_paperless_db, self.receipt, should_unidecode
-        )
-
-    def get_original_document_path(self) -> Path | None:
-        if self.receipt.zoriginalfilename:
-            document_path = get_document_path(self.path_to_paperless_db, self.receipt)
-            document_file_name = document_path.name
-            document_file_name_without_extension = document_file_name.rsplit(".", 1)[0]
-            original_document_path = (
-                document_path.parent
-                / document_file_name_without_extension
-                / self.receipt.zoriginalfilename
-            )
-            return original_document_path
-        return None
-
-    def get_thumbnail_path(self) -> Path | None:
-        if self.receipt.zthumbnailpath:
-            return self.path_to_paperless_db / Path(self.receipt.zthumbnailpath)
-        return None
 
     def get_document_title(self) -> str:
         return get_document_title(self.receipt)
@@ -240,20 +134,33 @@ class ObsidianItem:
                 content.append(f"![[{file_path}]]")
 
         markdown = Post(content="\n".join(content))
-        if receipt.zoriginalfilename:
-            markdown.metadata["Original filename"] = receipt.zoriginalfilename
+        tags = TagSet(["paperless"])
+        self._set_basic_metadata(markdown)
+        self._set_collection_metadata(markdown, tags)
+        self._set_category_metadata(markdown, tags)
+        self._set_receipt_metadata(markdown)
+        self._set_document_metadata(markdown, tags)
+        self._set_status_metadata(markdown)
+
+        markdown.metadata["tags"] = set(tags)
+        return markdown
+
+    def _set_basic_metadata(self, markdown: Post) -> None:
+        """Set basic metadata like filename, dates, and type."""
+        if self.receipt.zoriginalfilename:
+            markdown.metadata["Original filename"] = self.receipt.zoriginalfilename
         receipt_date = format_datetime_utc(self.receipt.zdate, date_only=True)
         markdown.metadata["Date"] = receipt_date
-        markdown.metadata["Import date"] = format_datetime_utc(receipt.zimportdate)
+        markdown.metadata["Import date"] = format_datetime_utc(self.receipt.zimportdate)
 
-        document_type = receipt.zdatatype.zname
+        document_type = self.receipt.zdatatype.zname
         if document_type:
             markdown.metadata["Type"] = document_type
 
-        tags = TagSet(["paperless"])
-
+    def _set_collection_metadata(self, markdown: Post, tags: TagSet) -> None:
+        """Set collection-related metadata and tags."""
         collections = []
-        for receipt_collection in receipt.collections:
+        for receipt_collection in self.receipt.collections:
             assert isinstance(receipt_collection, ReceiptCollection)
             if receipt_collection.collection.z_pk == 1:
                 # ignore the "Library" collection
@@ -265,34 +172,42 @@ class ObsidianItem:
         if collections:
             markdown.metadata["Collection paths"] = collections
 
+    def _set_category_metadata(self, markdown: Post, tags: TagSet) -> None:
+        """Set category and subcategory metadata and tags."""
         try:
-            markdown.metadata["Category"] = receipt.zcategory.zname
-            tags.add(receipt.zcategory.zname)
+            markdown.metadata["Category"] = self.receipt.zcategory.zname
+            tags.add(self.receipt.zcategory.zname)
         except Zcategory.DoesNotExist:
             pass
 
         try:
-            markdown.metadata["Subcategory"] = receipt.zsubcategory.zname
-            tags.add(receipt.zsubcategory.zname)
+            markdown.metadata["Subcategory"] = self.receipt.zsubcategory.zname
+            tags.add(self.receipt.zsubcategory.zname)
         except Zsubcategory.DoesNotExist:
             pass
 
         try:
-            markdown.metadata["Payment method"] = receipt.zpaymentmethod.zname
+            markdown.metadata["Payment method"] = self.receipt.zpaymentmethod.zname
         except Zpaymentmethod.DoesNotExist:
             pass
 
-        if receipt.zdatatype.z_pk == DataType.RECEIPT.value:
-            markdown.metadata["Amount"] = receipt.zamount
-            if receipt.ztaxamount is not None:
-                markdown.metadata["Tax/VAT"] = receipt.ztaxamount
+    def _set_receipt_metadata(self, markdown: Post) -> None:
+        """Set receipt-specific metadata."""
+        if self.receipt.zdatatype.z_pk == DataType.RECEIPT.value:
+            markdown.metadata["Amount"] = self.receipt.zamount
+            if self.receipt.ztaxamount is not None:
+                markdown.metadata["Tax/VAT"] = self.receipt.ztaxamount
 
-        if receipt.zocrattemptedvalue == 1 and receipt.zocrresult:
-            markdown.metadata["OCR result"] = receipt.zocrresult
+    def _set_document_metadata(self, markdown: Post, tags: TagSet) -> None:
+        """Set document-specific metadata and tags."""
+        document_type = self.receipt.zdatatype.zname
+
+        if self.receipt.zocrattemptedvalue == 1 and self.receipt.zocrresult:
+            markdown.metadata["OCR result"] = self.receipt.zocrresult
 
         document_paths = [
-            self.get_document_path(),
-            self.get_document_path(should_unidecode=True),
+            self.document_path.get_document_path(),
+            self.document_path.get_document_path(should_unidecode=True),
         ]
         document_exists = False
         for document_path in document_paths:
@@ -305,20 +220,18 @@ class ObsidianItem:
             tags.add(f"paperless-type-{document_type}")
         if not document_exists:
             tags.add("paperless-document-missing")
-        for tag in receipt.receipt_tags:
+        for tag in self.receipt.receipt_tags:
             assert isinstance(tag, ReceiptTag)
             if tag.tag.zname:
                 tags.add(tag.tag.zname)
-        if tags:
-            markdown.metadata["tags"] = set(tags)
 
-        if receipt.zinboxvalue == 1:
+    def _set_status_metadata(self, markdown: Post) -> None:
+        """Set status-related metadata."""
+        if self.receipt.zinboxvalue == 1:
             markdown.metadata["In inbox"] = True
 
-        if receipt.zintrashvalue == 1:
+        if self.receipt.zintrashvalue == 1:
             markdown.metadata["In trash"] = True
-
-        return markdown
 
 
 class CollectionItem:
@@ -333,11 +246,6 @@ class CollectionItem:
         if collection_md_path.exists():
             raise Exception(f"Collection file {collection_md_path} already exists")
         dump(self.markdown, collection_md_path)
-
-
-class ExportResult:
-    documents: list[ObsidianItem] = []
-    collection_items: list[CollectionItem] = []
 
 
 def get_receipt_count(path_to_paperless_db: Path) -> int:
