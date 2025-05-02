@@ -56,7 +56,6 @@
 # name: test_export[document_10]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -119,16 +118,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_11]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -145,17 +144,15 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_12]
   dict({
-    'Collection paths': list([
-      'Library',
-    ]),
     'Date': '2025-05-01',
     'Import date': '2025-05-01T10:29:55.838063+00:00',
     'OCR result': '''
@@ -204,17 +201,14 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_13]
   dict({
-    'Collection paths': list([
-      'Library',
-    ]),
     'Date': '2025-05-01',
     'Import date': '2025-05-01T22:36:54.529878+00:00',
     'In inbox': True,
@@ -327,17 +321,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_1]
   dict({
     'Category': 'Software/Hardware',
     'Collection paths': list([
-      'Library',
       'My collection',
       'Test Folder/Another collection',
     ]),
@@ -480,20 +473,22 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'another-collection',
+      'another-tag',
+      'my-collection',
+      'my-subcategory',
+      'my-tag',
       'paperless',
       'paperless-type-email',
-      'another-tag',
-      'my_tag',
-    ]),
+      'software-hardware',
+      'test-folder',
+    }),
   })
 # ---
 # name: test_export[document_2]
   dict({
     'Amount': 93.5,
-    'Collection paths': list([
-      'Library',
-    ]),
     'Date': '2025-04-18',
     'Import date': '2025-04-18T21:22:35.167018+00:00',
     'In inbox': True,
@@ -539,17 +534,14 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
       'paperless',
       'paperless-type-receipt',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_3]
   dict({
-    'Collection paths': list([
-      'Library',
-    ]),
     'Date': '2025-04-24',
     'Import date': '2025-04-23T23:24:59.945056+00:00',
     'In inbox': True,
@@ -686,17 +678,14 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_4]
   dict({
-    'Collection paths': list([
-      'Library',
-    ]),
     'Date': '2025-04-25',
     'Import date': '2025-04-24T23:39:03.893648+00:00',
     'In inbox': True,
@@ -709,17 +698,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
       'paperless',
-      'paperless-type-document',
       'paperless-document-missing',
-    ]),
+      'paperless-type-document',
+    }),
   })
 # ---
 # name: test_export[document_5]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -744,16 +732,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_6]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -912,16 +900,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_7]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -955,16 +943,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_8]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -986,16 +974,16 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[document_9]
   dict({
     'Collection paths': list([
-      'Library',
       'New Test PDFs',
     ]),
     'Date': '2025-05-01',
@@ -1031,10 +1019,11 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': list([
+    'tags': set({
+      'new-test-pdfs',
       'paperless',
       'paperless-type-document',
-    ]),
+    }),
   })
 # ---
 # name: test_export[tree]
