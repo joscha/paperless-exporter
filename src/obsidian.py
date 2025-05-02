@@ -253,6 +253,11 @@ def get_receipt_count(path_to_paperless_db: Path) -> int:
         return Zreceipt.select().count()
 
 
+def get_collection_count(path_to_paperless_db: Path) -> int:
+    with PaperlessDatabase(path_to_paperless_db):
+        return Zcollection.select().count()
+
+
 async def export(
     path_to_paperless_db: Path, out_dir: Path
 ) -> AsyncGenerator[ObsidianItem | CollectionItem, None]:
