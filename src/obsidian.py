@@ -267,11 +267,13 @@ class ObsidianItem:
 
         try:
             markdown.metadata["Category"] = receipt.zcategory.zname
+            tags.append(slugify(receipt.zcategory.zname))
         except Zcategory.DoesNotExist:
             pass
 
         try:
             markdown.metadata["Subcategory"] = receipt.zsubcategory.zname
+            tags.append(slugify(receipt.zsubcategory.zname))
         except Zsubcategory.DoesNotExist:
             pass
 

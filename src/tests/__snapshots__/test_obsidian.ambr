@@ -477,9 +477,11 @@
       'another-collection',
       'another-tag',
       'my-collection',
+      'my-subcategory',
       'my-tag',
       'paperless',
       'paperless-type-email',
+      'software-hardware',
       'test-folder',
     }),
   })
