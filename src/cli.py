@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 import asyncio
 from tqdm.asyncio import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
 from .obsidian import export, get_receipt_count
 
@@ -68,8 +69,9 @@ def main():
             async for _ in generator:
                 pass
         else:
-            async for _ in tqdm(generator, total=count, desc="Exporting"):
-                pass
+            with logging_redirect_tqdm():
+                async for _ in tqdm(generator, total=count, desc="Exporting"):
+                    pass
 
     # Run the export
     try:
