@@ -1059,7 +1059,7 @@
   │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
   │   ├── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
   │   ├── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
-  │   └── orphaned_1842b236.document.pdf
+  │   └── orphaned_1842b236_orphaned-file.document.pdf
   ├── collections/
   │   ├── Test Folder/
   │   │   └── Another collection.md
