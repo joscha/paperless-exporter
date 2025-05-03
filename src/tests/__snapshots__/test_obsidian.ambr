@@ -118,11 +118,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_11]
@@ -144,11 +145,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_12]
@@ -201,10 +203,11 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_13]
@@ -321,10 +324,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+      'süper',
+    ]),
   })
 # ---
 # name: test_export[document_1]
@@ -473,17 +478,17 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
-      'another-collection',
+    'tags': list([
       'another-tag',
       'my-collection',
       'my-subcategory',
       'my-tag',
       'paperless',
-      'paperless-type-email',
+      'paperless/missing/document',
+      'paperless/type/email',
       'software-hardware',
-      'test-folder',
-    }),
+      'test-folder/another-collection',
+    ]),
   })
 # ---
 # name: test_export[document_2]
@@ -534,10 +539,11 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'paperless',
-      'paperless-type-receipt',
-    }),
+      'paperless/missing/document',
+      'paperless/type/receipt',
+    ]),
   })
 # ---
 # name: test_export[document_3]
@@ -678,10 +684,11 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_4]
@@ -698,11 +705,11 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'paperless',
-      'paperless-document-missing',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_5]
@@ -732,11 +739,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_6]
@@ -900,11 +908,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_7]
@@ -943,11 +952,13 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
+      '_200',
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_8]
@@ -974,11 +985,13 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
+      '100/200',
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[document_9]
@@ -1019,11 +1032,12 @@
       #### original
       ![[linked_attachment.original.pdf]]
     ''',
-    'tags': set({
+    'tags': list([
       'new-test-pdfs',
       'paperless',
-      'paperless-type-document',
-    }),
+      'paperless/missing/document',
+      'paperless/type/document',
+    ]),
   })
 # ---
 # name: test_export[tree]
