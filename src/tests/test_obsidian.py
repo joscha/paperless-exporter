@@ -32,13 +32,16 @@ async def test_export(tmp_path, snapshot):
             )
         elif isinstance(item, OrphanedFileItem):
             assert (
-                snapshot(name=f"orphaned_file_{item.file_hash[:8]}")
+                snapshot(
+                    name=f"orphaned_file_{item.file_hash[:8]}",
+                    exclude=props("Original path"),
+                )
                 == item.transform(
                     {
-                        "document": "linked_attachment.document.pdf",
+                        "document": Path("linked_attachment.document.pdf"),
                     },
                     {
-                        "document": "copied.file.pdf",
+                        "document": Path("copied.file.pdf"),
                     },
                 ).to_dict()
             )

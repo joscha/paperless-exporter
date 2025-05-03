@@ -1030,7 +1030,6 @@
 # ---
 # name: test_export[orphaned_file_1842b236]
   dict({
-    'Original path': 'copied.file.pdf',
     'Type': 'Orphaned file',
     'content': '''
       #### document

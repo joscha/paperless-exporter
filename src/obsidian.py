@@ -284,7 +284,9 @@ class OrphanedFileItem:
                 content.append(f"![[{file_path}]]")
 
         markdown = Post(content="\n".join(content))
-        markdown.metadata["Original path"] = str(copied_files["document"])
+        markdown.metadata["Original path"] = (
+            copied_files["document"].absolute().as_uri()
+        )
         markdown.metadata["Type"] = "Orphaned file"
         markdown.metadata["tags"] = ["paperless", "paperless/orphaned"]
 
