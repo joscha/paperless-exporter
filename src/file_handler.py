@@ -1,8 +1,7 @@
-import hashlib
 from pathlib import Path
 from shutil import copy
 from typing import Dict, Tuple
-from .utils import sanitize_filename_for_obsidian
+from .utils import sanitize_filename_for_obsidian, calculate_file_hash
 
 
 class FileHandler:
@@ -15,7 +14,7 @@ class FileHandler:
 
     def copy_file(self, file_name: str, file_path: Path, prefix: str) -> Path:
         """Copy a file to the attachments directory with a unique name."""
-        file_hash = hashlib.md5(file_path.read_bytes()).hexdigest()
+        file_hash = calculate_file_hash(file_path)
         if file_hash in self.seen_hashes:
             return None
 

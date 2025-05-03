@@ -18,7 +18,12 @@ from peewee import fn, SqliteDatabase
 from .tag_set import TagSet
 from .document_path import DocumentPath
 from .file_handler import FileHandler
-from .utils import format_datetime_utc, create_out_dir, sanitize_filename_for_obsidian
+from .utils import (
+    calculate_file_hash,
+    format_datetime_utc,
+    create_out_dir,
+    sanitize_filename_for_obsidian,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -87,7 +92,10 @@ class ObsidianItem:
         self.document_path = DocumentPath(path_to_paperless_db, receipt)
 
     def save(
-        self, out_dir_path: Path, attachments_dir_path: Path, max_id_length: int
+        self,
+        out_dir_path: Path,
+        max_id_length: int,
+        file_handler: FileHandler,
     ) -> NoteName:
         title = self.get_document_title()
         id: ReceiptPrimaryKey = self.receipt.z_pk
@@ -110,7 +118,6 @@ class ObsidianItem:
             if thumbnail_path and thumbnail_path.exists():
                 original_files["thumbnail"] = thumbnail_path
 
-        file_handler = FileHandler(out_dir_path, attachments_dir_path)
         linked_attachments, copied_files = file_handler.copy_files(
             original_files, prefix
         )
@@ -255,6 +262,103 @@ class CollectionItem:
         dump(self.markdown, collection_md_path)
 
 
+class OrphanedFileItem:
+    """Represents an orphaned file that needs to be exported."""
+
+    file_path: Path
+    relative_path: Path
+    file_hash: str
+
+    def __init__(self, file_path: Path, relative_path: Path, file_hash: str):
+        self.file_path = file_path
+        self.relative_path = relative_path
+        self.file_hash = file_hash
+
+    def transform(
+        self, linked_attachments: Dict[str, Path], copied_files: Dict[str, Path]
+    ) -> Post:
+        content = []
+        if linked_attachments:
+            for file_name, file_path in linked_attachments.items():
+                content.append(f"#### {file_name}")
+                content.append(f"![[{file_path}]]")
+
+        markdown = Post(content="\n".join(content))
+        markdown.metadata["Original path"] = str(copied_files["document"])
+        markdown.metadata["Type"] = "Orphaned file"
+        markdown.metadata["tags"] = ["paperless", "paperless/orphaned"]
+
+        return markdown
+
+    def save(
+        self,
+        out_dir_path: Path,
+        prefix: str,
+        file_handler: FileHandler,
+    ) -> NoteName:
+        """Save the orphaned file to the Obsidian vault."""
+        note_name: NoteName = sanitize_filename_for_obsidian(
+            f"Orphaned {self.relative_path.stem}"
+        )
+        out_file_path = out_dir_path / f"{note_name}.md"
+        if out_file_path.exists():
+            raise Exception(f"File {out_file_path} already exists")
+
+        linked_attachments, copied_files = file_handler.copy_files(
+            {"document": self.file_path}, prefix
+        )
+
+        markdown = self.transform(linked_attachments, copied_files)
+
+        dump(markdown, out_file_path)
+        return note_name
+
+
+def find_orphaned_files(path_to_paperless_db: Path) -> list[OrphanedFileItem]:
+    """Find all orphaned files in the Paperless library."""
+    with PaperlessDatabase(path_to_paperless_db):
+        # Get all document paths from receipts
+        referenced_paths = set()
+        for receipt in Zreceipt.select():
+            document_path = DocumentPath(path_to_paperless_db, receipt)
+            paths = document_path.get_all_paths()
+            referenced_paths.update(paths.values())
+
+        # Get all files in the Documents directory
+        documents_dir = path_to_paperless_db / "Documents"
+        if not documents_dir.exists():
+            logger.warning(f"Documents directory not found at {documents_dir}")
+            return []
+
+        # Find orphaned files
+        orphaned_files = []
+        seen_hashes = set()
+        for file_path in documents_dir.rglob("*"):
+            if not file_path.is_file():
+                continue
+
+            # Skip files that are referenced by receipts
+            if file_path in referenced_paths:
+                continue
+
+            # Skip backup files
+            if file_path.parent.name == "Backups":
+                continue
+
+            # Calculate file hash
+            file_hash = calculate_file_hash(file_path)
+
+            # Skip if we've already seen this hash
+            if file_hash in seen_hashes:
+                continue
+
+            seen_hashes.add(file_hash)
+            relative_path = file_path.relative_to(path_to_paperless_db)
+            orphaned_files.append(OrphanedFileItem(file_path, relative_path, file_hash))
+
+        return orphaned_files
+
+
 def get_receipt_count(path_to_paperless_db: Path) -> int:
     with PaperlessDatabase(path_to_paperless_db):
         return Zreceipt.select().count()
@@ -275,41 +379,14 @@ def get_collection_with_receipts_count(path_to_paperless_db: Path) -> int:
 
 def check_orphaned_files(path_to_paperless_db: Path) -> None:
     """Check for files in the Paperless library that are not referenced by any receipt."""
-    with PaperlessDatabase(path_to_paperless_db):
-        # Get all document paths from receipts
-        referenced_paths = set()
-        for receipt in Zreceipt.select():
-            document_path = DocumentPath(path_to_paperless_db, receipt)
-            paths = document_path.get_all_paths()
-            referenced_paths.update(paths.values())
-
-        # Get all files in the Documents directory
-        documents_dir = path_to_paperless_db / "Documents"
-        if not documents_dir.exists():
-            logger.warning(f"Documents directory not found at {documents_dir}")
-            return
-
-        # Walk through all files in the Documents directory
-        for file_path in documents_dir.rglob("*"):
-            if not file_path.is_file():
-                continue
-
-            # Skip files that are referenced by receipts
-            if file_path in referenced_paths:
-                continue
-
-            # Skip backup files
-            if file_path.parent.name == "Backups":
-                continue
-
-            # Log orphaned file
-            relative_path = file_path.relative_to(path_to_paperless_db)
-            print(f"Found orphaned file: {relative_path}", file=sys.stderr)  # noqa: T201
+    orphaned_files = find_orphaned_files(path_to_paperless_db)
+    for orphaned_file in orphaned_files:
+        print(f"Found orphaned file: {orphaned_file.relative_path}", file=sys.stderr)  # noqa: T201
 
 
 async def export(
     path_to_paperless_db: Path, out_dir: Path
-) -> AsyncGenerator[ObsidianItem | CollectionItem, None]:
+) -> AsyncGenerator[ObsidianItem | CollectionItem | OrphanedFileItem, None]:
     with PaperlessDatabase(path_to_paperless_db):
         out_dir_path = create_out_dir(out_dir)
         attachments_dir_path = create_out_dir(out_dir_path / "_attachments")
@@ -318,15 +395,20 @@ async def export(
         logger.debug(f"Max receipt ID: {max_id}")
         max_length = len(str(max_id))
 
+        # Track all hashes from all document exports
+        all_exported_hashes = set()
+
         receipt_to_note_name: Dict[ReceiptPrimaryKey, NoteName] = {}
         receipts = [receipt for receipt in get_receipts()]
         for receipt in receipts:
+            # Create a new FileHandler for each receipt to keep exports isolated
+            file_handler = FileHandler(out_dir_path, attachments_dir_path)
             obsidian_item = ObsidianItem(receipt, path_to_paperless_db)
             yield obsidian_item
-            note_name = obsidian_item.save(
-                out_dir_path, attachments_dir_path, max_length
-            )
+            note_name = obsidian_item.save(out_dir_path, max_length, file_handler)
             receipt_to_note_name[receipt.z_pk] = note_name
+            # Collect hashes from this export
+            all_exported_hashes.update(file_handler.seen_hashes)
 
         for collection in get_collections_with_receipts(path_to_paperless_db):
             receipt_collections: list[ReceiptCollection] = collection.receipts
@@ -349,3 +431,18 @@ async def export(
             collection_item = CollectionItem(collection, markdown)
             yield collection_item
             collection_item.save(collection_md_path)
+
+        # Export orphaned files, but only those that don't share a hash with any exported file
+        orphaned_files = find_orphaned_files(path_to_paperless_db)
+        for orphaned_file in orphaned_files:
+            if orphaned_file.file_hash not in all_exported_hashes:
+                # Create a new FileHandler for the orphaned file
+                file_handler = FileHandler(out_dir_path, attachments_dir_path)
+                yield orphaned_file
+                orphaned_file.save(
+                    out_dir_path,
+                    f"orphaned_{orphaned_file.file_hash[:8]}",
+                    file_handler,
+                )
+                # Collect hashes from this export
+                all_exported_hashes.update(file_handler.seen_hashes)

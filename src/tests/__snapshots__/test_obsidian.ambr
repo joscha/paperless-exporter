@@ -1,7 +1,7 @@
 # serializer version: 1
 # name: test_export[collection_1]
-  Post(
-    content='''
+  dict({
+    'content': '''
       * [[sample-invoice (1)]]
       * [[wordpress-pdf-invoice-plugin-sample (2)]]
       * [[sample-invoice (3)]]
@@ -16,30 +16,21 @@
       * [[sample_ _with_ special characters _o_ _ (12)]]
       * [[file-sample_150kB_mit_ü (13)]]
     ''',
-    handler=None,
-    metadata=dict({
-    }),
-  )
+  })
 # ---
 # name: test_export[collection_2]
-  Post(
-    content='* [[sample-invoice (1)]]',
-    handler=None,
-    metadata=dict({
-    }),
-  )
+  dict({
+    'content': '* [[sample-invoice (1)]]',
+  })
 # ---
 # name: test_export[collection_3]
-  Post(
-    content='* [[sample-invoice (1)]]',
-    handler=None,
-    metadata=dict({
-    }),
-  )
+  dict({
+    'content': '* [[sample-invoice (1)]]',
+  })
 # ---
 # name: test_export[collection_4]
-  Post(
-    content='''
+  dict({
+    'content': '''
       * [[pdf-test (5)]]
       * [[drylab (6)]]
       * [[invoicesample (7)]]
@@ -48,10 +39,7 @@
       * [[Free_Test_Data_100KB_PDF (10)]]
       * [[test_pdf_acrobat (11)]]
     ''',
-    handler=None,
-    metadata=dict({
-    }),
-  )
+  })
 # ---
 # name: test_export[document_10]
   dict({
@@ -1040,6 +1028,20 @@
     ]),
   })
 # ---
+# name: test_export[orphaned_file_1842b236]
+  dict({
+    'Original path': 'copied.file.pdf',
+    'Type': 'Orphaned file',
+    'content': '''
+      #### document
+      ![[linked_attachment.document.pdf]]
+    ''',
+    'tags': list([
+      'paperless',
+      'paperless/orphaned',
+    ]),
+  })
+# ---
 # name: test_export[tree]
   '''
   test_export0/
@@ -1057,7 +1059,8 @@
   │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
   │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
   │   ├── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
-  │   └── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
+  │   ├── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
+  │   └── orphaned_1842b236.document.pdf
   ├── collections/
   │   ├── Test Folder/
   │   │   └── Another collection.md
@@ -1070,6 +1073,7 @@
   ├── Get_Started_With_Smallpdf (9).md
   ├── invoicesample (7).md
   ├── missing (4).md
+  ├── Orphaned orphaned-file.md
   ├── pdf-test (5).md
   ├── PDF_TestPage (8).md
   ├── sample-invoice (1).md

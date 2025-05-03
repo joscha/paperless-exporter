@@ -7,10 +7,12 @@ from tqdm.asyncio import tqdm
 from .obsidian import (
     CollectionItem,
     ObsidianItem,
+    OrphanedFileItem,
     check_orphaned_files,
     export,
     get_receipt_count,
     get_collection_with_receipts_count,
+    find_orphaned_files,
 )
 
 
@@ -83,6 +85,12 @@ def main():
             sys.exit(1)
         print(f"Found {count} receipts to export.")  # noqa T201
 
+        # Get count of orphaned files
+        orphaned_files = find_orphaned_files(args.source)
+        orphaned_count = len(orphaned_files)
+        if orphaned_count > 0:
+            print(f"Found {orphaned_count} orphaned files to export.")  # noqa T201
+
         generator = export(args.source, args.target)
         if args.no_progress:
             async for _ in generator:
@@ -101,15 +109,24 @@ def main():
                 unit="collection",
                 disable=args.no_progress,
             )
+            orphaned_progress = tqdm(
+                total=orphaned_count,
+                desc="Exporting orphaned files",
+                unit="file",
+                disable=args.no_progress,
+            )
 
             async for item in generator:
                 if isinstance(item, ObsidianItem):
                     document_progress.update(1)
                 elif isinstance(item, CollectionItem):
                     collection_progress.update(1)
+                elif isinstance(item, OrphanedFileItem):
+                    orphaned_progress.update(1)
 
             document_progress.close()
             collection_progress.close()
+            orphaned_progress.close()
 
     # Run the export
     try:
