@@ -2,6 +2,7 @@ from pathlib import Path
 import sys
 from typing import AsyncGenerator, Dict, Generator
 import logging
+import unicodedata
 from .model import (
     DataType,
     ReceiptCollection,
@@ -358,6 +359,11 @@ def find_orphaned_files(
             seen_hashes.add(file_hash)
             relative_path = file_path.relative_to(path_to_paperless_db)
             orphaned_files.append(OrphanedFileItem(file_path, relative_path, file_hash))
+
+        orphaned_files = sorted(
+            orphaned_files,
+            key=lambda x: unicodedata.normalize("NFC", x.relative_path.as_posix()),
+        )
 
         return orphaned_files
 
