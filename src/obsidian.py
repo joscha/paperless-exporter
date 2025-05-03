@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 from typing import AsyncGenerator, Dict, Generator
 import logging
 from .model import (
@@ -270,6 +271,40 @@ def get_collection_with_receipts_count(path_to_paperless_db: Path) -> int:
         return (
             Zcollection.select().join(ReceiptCollection).group_by(Zcollection).count()
         )
+
+
+def check_orphaned_files(path_to_paperless_db: Path) -> None:
+    """Check for files in the Paperless library that are not referenced by any receipt."""
+    with PaperlessDatabase(path_to_paperless_db):
+        # Get all document paths from receipts
+        referenced_paths = set()
+        for receipt in Zreceipt.select():
+            document_path = DocumentPath(path_to_paperless_db, receipt)
+            paths = document_path.get_all_paths()
+            referenced_paths.update(paths.values())
+
+        # Get all files in the Documents directory
+        documents_dir = path_to_paperless_db / "Documents"
+        if not documents_dir.exists():
+            logger.warning(f"Documents directory not found at {documents_dir}")
+            return
+
+        # Walk through all files in the Documents directory
+        for file_path in documents_dir.rglob("*"):
+            if not file_path.is_file():
+                continue
+
+            # Skip files that are referenced by receipts
+            if file_path in referenced_paths:
+                continue
+
+            # Skip backup files
+            if file_path.parent.name == "Backups":
+                continue
+
+            # Log orphaned file
+            relative_path = file_path.relative_to(path_to_paperless_db)
+            print(f"Found orphaned file: {relative_path}", file=sys.stderr)  # noqa: T201
 
 
 async def export(
