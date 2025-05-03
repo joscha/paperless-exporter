@@ -1031,10 +1031,7 @@
 # name: test_export[orphaned_file_1842b236]
   dict({
     'Type': 'Orphaned file',
-    'content': '''
-      #### document
-      ![[linked_attachment.document.pdf]]
-    ''',
+    'content': '![[linked_attachment.document.pdf]]',
     'tags': list([
       'paperless',
       'paperless/orphaned',

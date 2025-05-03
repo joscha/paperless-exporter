@@ -145,9 +145,13 @@ class ObsidianItem:
             content.append(receipt.znotes.strip())
             content.append("")
             content.append("-----")
-        if linked_attachments and len(linked_attachments) > 0:
+        if (
+            linked_attachments
+            and (num_linked_attachments := len(linked_attachments)) > 0
+        ):
             for file_name, file_path in linked_attachments.items():
-                content.append(f"#### {file_name}")
+                if num_linked_attachments > 1:
+                    content.append(f"#### {file_name}")
                 content.append(f"![[{file_path}]]")
 
         markdown = Post(content="\n".join(content))
@@ -279,9 +283,13 @@ class OrphanedFileItem:
         self, linked_attachments: Dict[str, Path], copied_files: Dict[str, Path]
     ) -> Post:
         content = []
-        if linked_attachments:
+        if (
+            linked_attachments
+            and (num_linked_attachments := len(linked_attachments)) > 0
+        ):
             for file_name, file_path in linked_attachments.items():
-                content.append(f"#### {file_name}")
+                if num_linked_attachments > 1:
+                    content.append(f"#### {file_name}")
                 content.append(f"![[{file_path}]]")
 
         markdown = Post(content="\n".join(content))
