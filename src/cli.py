@@ -112,7 +112,7 @@ def main():
                     disable=args.no_progress,
                 )
                 orphaned_progress = tqdm(
-                    total=None,  # We can't easily use orphaned_count here, because we skip orphaned files that have already been exported
+                    total=orphaned_count,
                     desc="Exporting orphaned files",
                     unit="file",
                     disable=args.no_progress,
@@ -120,12 +120,18 @@ def main():
 
                 async for item in generator:
                     if isinstance(item, ObsidianItem):
-                        document_progress.update(1)
+                        document_progress.update()
                     elif isinstance(item, CollectionItem):
-                        collection_progress.update(1)
+                        document_progress.total = document_progress.n
+                        document_progress.refresh()
+                        collection_progress.update()
                     elif isinstance(item, OrphanedFileItem):
-                        orphaned_progress.update(1)
+                        collection_progress.total = collection_progress.n
+                        collection_progress.refresh()
+                        orphaned_progress.update()
 
+                orphaned_progress.total = orphaned_progress.n
+                orphaned_progress.refresh()
                 document_progress.close()
                 collection_progress.close()
                 orphaned_progress.close()
