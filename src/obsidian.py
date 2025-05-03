@@ -457,6 +457,6 @@ async def export(
             yield orphaned_file
             orphaned_file.save(
                 out_dir_path,
-                f"orphaned_{orphaned_file.file_hash[:8]}",
+                f"orphaned_{orphaned_file.file_hash[:8]}_{orphaned_file.relative_path.stem}",
                 file_handler,
             )
