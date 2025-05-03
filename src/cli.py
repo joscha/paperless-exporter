@@ -3,9 +3,14 @@ import sys
 from pathlib import Path
 import asyncio
 from tqdm.asyncio import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
 
-from .obsidian import export, get_receipt_count
+from .obsidian import (
+    CollectionItem,
+    ObsidianItem,
+    export,
+    get_receipt_count,
+    get_collection_with_receipts_count,
+)
 
 
 def validate_paperless_library(path: Path) -> Path:
@@ -69,9 +74,28 @@ def main():
             async for _ in generator:
                 pass
         else:
-            with logging_redirect_tqdm():
-                async for _ in tqdm(generator, total=count, desc="Exporting"):
-                    pass
+            # Create progress bars
+            document_progress = tqdm(
+                total=count,
+                desc="Exporting documents",
+                unit="document",
+                disable=args.no_progress,
+            )
+            collection_progress = tqdm(
+                total=get_collection_with_receipts_count(args.source),
+                desc="Linking documents to collections",
+                unit="collection",
+                disable=args.no_progress,
+            )
+
+            async for item in generator:
+                if isinstance(item, ObsidianItem):
+                    document_progress.update(1)
+                elif isinstance(item, CollectionItem):
+                    collection_progress.update(1)
+
+            document_progress.close()
+            collection_progress.close()
 
     # Run the export
     try:
