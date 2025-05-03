@@ -16,7 +16,8 @@
   │   ├── 2025-05-01_10_Free_Test_Data_100KB_PDF.document.pdf
   │   ├── 2025-05-01_11_test_pdf_acrobat.document.pdf
   │   ├── 2025-05-01_12_sample_ _with_ special characters _o_ _.document.pdf
-  │   └── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
+  │   ├── 2025-05-01_13_file-sample_150kB_mit_ü.document.unidecode.pdf
+  │   └── orphaned_1842b236.document.pdf
   ├── collections/
   │   ├── Test Folder/
   │   │   └── Another collection.md
@@ -29,6 +30,7 @@
   ├── Get_Started_With_Smallpdf (9).md
   ├── invoicesample (7).md
   ├── missing (4).md
+  ├── Orphaned orphaned-file.md
   ├── pdf-test (5).md
   ├── PDF_TestPage (8).md
   ├── sample-invoice (1).md
@@ -48,6 +50,7 @@
 # name: test_cli_generates_expected_tree[stdout]
   '''
   Found 13 receipts to export.
+  Found 2 orphaned files to export.
   Export completed successfully.
   
   '''

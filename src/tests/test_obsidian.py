@@ -7,6 +7,7 @@ from . import assert_tree_snapshot
 from ..obsidian import (
     CollectionItem,
     ObsidianItem,
+    OrphanedFileItem,
     export,
 )
 
@@ -25,6 +26,24 @@ async def test_export(tmp_path, snapshot):
                 ).to_dict()
             )
         elif isinstance(item, CollectionItem):
-            assert snapshot(name=f"collection_{item.collection.z_pk}") == item.markdown
+            assert (
+                snapshot(name=f"collection_{item.collection.z_pk}")
+                == item.markdown.to_dict()
+            )
+        elif isinstance(item, OrphanedFileItem):
+            assert (
+                snapshot(
+                    name=f"orphaned_file_{item.file_hash[:8]}",
+                    exclude=props("Original path"),
+                )
+                == item.transform(
+                    {
+                        "document": Path("linked_attachment.document.pdf"),
+                    },
+                    {
+                        "document": Path("copied.file.pdf"),
+                    },
+                ).to_dict()
+            )
 
     assert_tree_snapshot(tmp_path, snapshot(name="tree"))

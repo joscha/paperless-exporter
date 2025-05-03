@@ -1,8 +1,8 @@
 # serializer version: 1
 # name: test_orphaned_files_found
   '''
+  Found orphaned file: Documents/2025/03/22/orphaned-file-already-in-standard-export.pdf
   Found orphaned file: Documents/2025/03/22/orphaned-file.pdf
-  Found orphaned file: Documents/2025/03/22/orphaned-file-duplicate.pdf
   
   '''
 # ---

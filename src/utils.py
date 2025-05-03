@@ -2,6 +2,7 @@ import unicodedata
 from pathlib import Path
 from pathvalidate import sanitize_filename
 from datetime import datetime
+import hashlib
 
 # see https://forum.obsidian.md/t/valid-characters-for-file-names/55307/3
 OBSIDIAN_SPECIAL_CHARACTERS = list("[]#^|\\/:?")
@@ -66,3 +67,8 @@ def create_out_dir(dir_path: str | Path) -> Path:
         dir_path = Path(dir_path)
     dir_path.mkdir(parents=True, exist_ok=True)
     return dir_path
+
+
+def calculate_file_hash(file_path: Path) -> str:
+    """Calculate the MD5 hash of a file."""
+    return hashlib.md5(file_path.read_bytes()).hexdigest()
