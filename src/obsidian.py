@@ -314,7 +314,9 @@ class OrphanedFileItem:
         return note_name
 
 
-def find_orphaned_files(path_to_paperless_db: Path) -> list[OrphanedFileItem]:
+def find_orphaned_files(
+    path_to_paperless_db: Path, seen_hashes: set[str] = set()
+) -> list[OrphanedFileItem]:
     """Find all orphaned files in the Paperless library."""
     with PaperlessDatabase(path_to_paperless_db):
         # Get all document paths from receipts
@@ -332,7 +334,6 @@ def find_orphaned_files(path_to_paperless_db: Path) -> list[OrphanedFileItem]:
 
         # Find orphaned files
         orphaned_files = []
-        seen_hashes = set()
         for file_path in documents_dir.rglob("*"):
             if not file_path.is_file():
                 continue
@@ -433,16 +434,13 @@ async def export(
             collection_item.save(collection_md_path)
 
         # Export orphaned files, but only those that don't share a hash with any exported file
-        orphaned_files = find_orphaned_files(path_to_paperless_db)
+        orphaned_files = find_orphaned_files(path_to_paperless_db, all_exported_hashes)
         for orphaned_file in orphaned_files:
-            if orphaned_file.file_hash not in all_exported_hashes:
-                # Create a new FileHandler for the orphaned file
-                file_handler = FileHandler(out_dir_path, attachments_dir_path)
-                yield orphaned_file
-                orphaned_file.save(
-                    out_dir_path,
-                    f"orphaned_{orphaned_file.file_hash[:8]}",
-                    file_handler,
-                )
-                # Collect hashes from this export
-                all_exported_hashes.update(file_handler.seen_hashes)
+            # Create a new FileHandler for the orphaned file
+            file_handler = FileHandler(out_dir_path, attachments_dir_path)
+            yield orphaned_file
+            orphaned_file.save(
+                out_dir_path,
+                f"orphaned_{orphaned_file.file_hash[:8]}",
+                file_handler,
+            )

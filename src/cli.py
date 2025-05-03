@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 import asyncio
 from tqdm.asyncio import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
 from .obsidian import (
     CollectionItem,
@@ -96,37 +97,38 @@ def main():
             async for _ in generator:
                 pass
         else:
-            # Create progress bars
-            document_progress = tqdm(
-                total=count,
-                desc="Exporting documents",
-                unit="document",
-                disable=args.no_progress,
-            )
-            collection_progress = tqdm(
-                total=get_collection_with_receipts_count(args.source),
-                desc="Linking documents to collections",
-                unit="collection",
-                disable=args.no_progress,
-            )
-            orphaned_progress = tqdm(
-                total=orphaned_count,
-                desc="Exporting orphaned files",
-                unit="file",
-                disable=args.no_progress,
-            )
+            with logging_redirect_tqdm():
+                # Create progress bars
+                document_progress = tqdm(
+                    total=count,
+                    desc="Exporting documents",
+                    unit="document",
+                    disable=args.no_progress,
+                )
+                collection_progress = tqdm(
+                    total=get_collection_with_receipts_count(args.source),
+                    desc="Linking documents to collections",
+                    unit="collection",
+                    disable=args.no_progress,
+                )
+                orphaned_progress = tqdm(
+                    total=None,  # We can't easily use orphaned_count here, because we skip orphaned files that have already been exported
+                    desc="Exporting orphaned files",
+                    unit="file",
+                    disable=args.no_progress,
+                )
 
-            async for item in generator:
-                if isinstance(item, ObsidianItem):
-                    document_progress.update(1)
-                elif isinstance(item, CollectionItem):
-                    collection_progress.update(1)
-                elif isinstance(item, OrphanedFileItem):
-                    orphaned_progress.update(1)
+                async for item in generator:
+                    if isinstance(item, ObsidianItem):
+                        document_progress.update(1)
+                    elif isinstance(item, CollectionItem):
+                        collection_progress.update(1)
+                    elif isinstance(item, OrphanedFileItem):
+                        orphaned_progress.update(1)
 
-            document_progress.close()
-            collection_progress.close()
-            orphaned_progress.close()
+                document_progress.close()
+                collection_progress.close()
+                orphaned_progress.close()
 
     # Run the export
     try:
