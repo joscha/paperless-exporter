@@ -7,6 +7,7 @@ from tqdm.asyncio import tqdm
 from .obsidian import (
     CollectionItem,
     ObsidianItem,
+    check_orphaned_files,
     export,
     get_receipt_count,
     get_collection_with_receipts_count,
@@ -51,16 +52,29 @@ def main():
     )
     parser.add_argument(
         "target",
+        nargs="?",
         type=lambda p: validate_empty_or_create(Path(p)),
-        help="Path to the output folder (must not exist or must be empty).",
+        help="Path to the output folder (must not exist or must be empty). Required unless --check-orphans is used.",
     )
     parser.add_argument(
         "--no-progress",
         action="store_true",
         help="Disable progress bar during export.",
     )
+    parser.add_argument(
+        "--check-orphans",
+        action="store_true",
+        help="Check for orphaned files in the Paperless library.",
+    )
 
     args = parser.parse_args()
+
+    if args.check_orphans:
+        check_orphaned_files(args.source)
+        return
+
+    if not args.target:
+        parser.error("target argument is required unless --check-orphans is used")
 
     async def run_export():
         count = get_receipt_count(args.source)

@@ -48,6 +48,12 @@ paperless-exporter ~/Documents/library.paperless ~/Documents/obsidian-library
 If the output folder does not exist, it will be created.
 If it exists, it must be empty.
 
+### Additional Options
+
+- `--check-orphans`: Check for orphaned files in the Paperless library
+  (files that exist in the Documents directory but are not referenced by any receipt).
+  This option can be used without specifying an output folder.
+
 Run `paperless-exporter --help` for more information.
 
 ## Final Disclaimer
