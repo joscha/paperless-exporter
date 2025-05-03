@@ -2,7 +2,11 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/paperless-exporter)](https://pypi.org/project/paperless-exporter/)
 
-Export from Mariner Paperless (gone out of business) to:
+Export from Mariner Paperless (gone out of business)
+
+![CLI recording](https://github.com/user-attachments/assets/df400f05-2e22-4ba6-8be3-757ac782d6c2)
+
+to:
 
 - [Obsidian](https://obsidian.md/)-compatible Markdown. See:
   ![paperless](https://github.com/user-attachments/assets/25a937fd-e87c-42b5-9cac-9c8b52cad7b3)
